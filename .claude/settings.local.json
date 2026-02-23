@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:mastergradschools.com)",
+      "WebFetch(domain:poetsandquants.com)",
+      "WebFetch(domain:www.zhaw.ch)"
+    ]
+  }
+}

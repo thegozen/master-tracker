@@ -1,0 +1,2919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master's Application Tracker</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .dark {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #22c55e;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .clock {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-secondary.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Dashboard Cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .card-value.success { color: var(--success); }
+        .card-value.warning { color: var(--warning); }
+        .card-value.danger { color: var(--danger); }
+
+        /* Deadlines Section */
+        .deadlines-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .deadlines-section h2 {
+            font-size: 1.125rem;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .deadline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .deadline-item:last-child {
+            border-bottom: none;
+        }
+
+        .deadline-info {
+            flex: 1;
+        }
+
+        .deadline-uni {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .deadline-program {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .deadline-days {
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .deadline-days.urgent { background: #fef2f2; color: var(--danger); }
+        .deadline-days.soon { background: #fff7ed; color: var(--warning); }
+        .deadline-days.ok { background: #f0fdf4; color: var(--success); }
+
+        .dark .deadline-days.urgent { background: #450a0a; }
+        .dark .deadline-days.soon { background: #431407; }
+        .dark .deadline-days.ok { background: #052e16; }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        select {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            background: var(--border);
+        }
+
+        th .sort-icon {
+            margin-left: 4px;
+            opacity: 0.5;
+        }
+
+        th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        tr:hover {
+            background: var(--bg);
+            cursor: pointer;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-done {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-not-interested {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .status-in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-accepted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-enrolled {
+            background: #064e3b;
+            color: #ffffff;
+        }
+
+        .status-withdrawn {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .dark .status-done {
+            background: #052e16;
+            color: #4ade80;
+        }
+
+        .dark .status-pending {
+            background: #422006;
+            color: #fbbf24;
+        }
+
+        .dark .status-rejected {
+            background: #450a0a;
+            color: #fca5a5;
+        }
+
+        .dark .status-not-interested {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .dark .status-in-progress {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        .dark .status-accepted {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .dark .status-enrolled {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .dark .status-withdrawn {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .country-flag {
+            font-size: 1.25rem;
+            margin-right: 4px;
+        }
+
+        /* Calendar View */
+        .calendar-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .calendar-container.active {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: auto repeat(6, 1fr);
+            gap: 4px;
+            width: 100%;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            padding: 8px;
+        }
+
+        .calendar-day {
+            min-height: 70px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px;
+            font-size: 0.875rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.4;
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary);
+            border-width: 2px;
+        }
+
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .day-event {
+            font-size: 0.7rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .day-event.done {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .day-event.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .day-event.rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .day-event.not-interested {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .day-event.in-progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .day-event.accepted {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .day-event.enrolled {
+            background: #064e3b;
+            color: #ffffff;
+        }
+
+        .day-event.withdrawn {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .dark .day-event.done {
+            background: #052e16;
+            color: #4ade80;
+        }
+
+        .dark .day-event.pending {
+            background: #422006;
+            color: #fbbf24;
+        }
+
+        .dark .day-event.rejected {
+            background: #450a0a;
+            color: #fca5a5;
+        }
+
+        .dark .day-event.not-interested {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .dark .day-event.in-progress {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        .dark .day-event.accepted {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .dark .day-event.enrolled {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .dark .day-event.withdrawn {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-subtitle {
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .detail-item {
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .detail-section p {
+            white-space: pre-wrap;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .detail-section a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .detail-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Status Select */
+        .status-select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .status-select.status-done {
+            border-color: var(--success);
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-select.status-pending {
+            border-color: var(--warning);
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-select.status-rejected {
+            border-color: var(--danger);
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-select.status-not-interested {
+            border-color: #94a3b8;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .status-select.status-in-progress {
+            border-color: #3b82f6;
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-select.status-accepted {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-select.status-enrolled {
+            border-color: #064e3b;
+            background: #064e3b;
+            color: #ffffff;
+        }
+
+        .status-select.status-withdrawn {
+            border-color: #64748b;
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .dark .status-select.status-done {
+            background: #052e16;
+            color: #4ade80;
+        }
+
+        .dark .status-select.status-pending {
+            background: #422006;
+            color: #fbbf24;
+        }
+
+        .dark .status-select.status-rejected {
+            background: #450a0a;
+            color: #fca5a5;
+        }
+
+        .dark .status-select.status-not-interested {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .dark .status-select.status-in-progress {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        .dark .status-select.status-accepted {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .dark .status-select.status-enrolled {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .dark .status-select.status-withdrawn {
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            table {
+                font-size: 0.875rem;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+
+            .calendar-day {
+                min-height: 50px;
+            }
+
+            .day-event {
+                font-size: 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .search-input, select {
+                width: 100%;
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        /* Date Popup */
+        .date-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+
+        .date-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .date-popup {
+            background: var(--bg-card);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .date-popup-overlay.active .date-popup {
+            transform: translateY(0);
+        }
+
+        .date-popup-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+        }
+
+        .date-popup-header h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .date-popup-body {
+            padding: 12px;
+        }
+
+        .date-programme-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .date-programme-item:hover {
+            background: var(--bg);
+        }
+
+        .date-programme-info {
+            flex: 1;
+        }
+
+        .date-programme-uni {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .date-programme-name {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Filter Toggle Buttons */
+        .filter-toggles {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-toggle {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-card);
+            color: var(--text-muted);
+        }
+
+        .filter-toggle:hover {
+            border-color: var(--text-muted);
+        }
+
+        .filter-toggle.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-toggle.active.toggle-done {
+            background: #16a34a;
+            border-color: #16a34a;
+        }
+
+        .filter-toggle.active.toggle-pending {
+            background: #ea580c;
+            border-color: #ea580c;
+        }
+
+        .filter-toggle.active.toggle-rejected {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .filter-toggle.active.toggle-not-interested {
+            background: #64748b;
+            border-color: #64748b;
+        }
+
+        .filter-toggle.active.toggle-in-progress {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .filter-toggle.active.toggle-accepted {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        .filter-toggle.active.toggle-enrolled {
+            background: #064e3b;
+            border-color: #064e3b;
+        }
+
+        .filter-toggle.active.toggle-withdrawn {
+            background: #64748b;
+            border-color: #64748b;
+        }
+
+        /* Multi-select Dropdown */
+        .multi-select {
+            position: relative;
+            min-width: 160px;
+        }
+
+        .multi-select-btn {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .multi-select-btn:hover {
+            border-color: var(--text-muted);
+        }
+
+        .multi-select-btn .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+        }
+
+        .multi-select.open .multi-select-btn .arrow {
+            transform: rotate(180deg);
+        }
+
+        .multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            display: none;
+        }
+
+        .multi-select.open .multi-select-dropdown {
+            display: block;
+        }
+
+        .multi-select-option {
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .multi-select-option:hover {
+            background: var(--bg);
+        }
+
+        .multi-select-option:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .multi-select-option:last-child {
+            border-radius: 0 0 8px 8px;
+        }
+
+        .multi-select-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .multi-select-option.selected .multi-select-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .multi-select-option.selected .multi-select-checkbox::after {
+            content: "✓";
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Editable Fields */
+        .edit-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .edit-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        .edit-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-save:hover {
+            background: #15803d;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #b91c1c;
+        }
+
+        .detail-section-edit {
+            margin-bottom: 20px;
+        }
+
+        .detail-section-edit h3 {
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <h1>Master's Application Tracker</h1>
+                <div class="clock" id="clock"></div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="openAddModal()">+ Add University</button>
+                <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+                <div class="view-toggle">
+                    <button class="btn btn-secondary active" id="tableViewBtn" onclick="setView('table')">Table</button>
+                    <button class="btn btn-secondary" id="calendarViewBtn" onclick="setView('calendar')">Calendar</button>
+                </div>
+                <button class="btn btn-secondary" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+            </div>
+        </header>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboardGrid">
+            <div class="card">
+                <div class="card-label">Total Programmes</div>
+                <div class="card-value" id="totalCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Not Started</div>
+                <div class="card-value" style="color: var(--text-muted);" id="notStartedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">In Progress</div>
+                <div class="card-value" style="color: #3b82f6;" id="inProgressCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Applied</div>
+                <div class="card-value warning" id="appliedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Accepted</div>
+                <div class="card-value success" id="acceptedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Rejected</div>
+                <div class="card-value danger" id="rejectedCount">0</div>
+            </div>
+        </div>
+
+        <!-- Upcoming Deadlines -->
+        <div class="deadlines-section">
+            <h2>Upcoming Deadlines</h2>
+            <div id="upcomingDeadlines">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search university or programme..." oninput="applyFilters()">
+            <div class="multi-select" id="countryMultiSelect">
+                <button type="button" class="multi-select-btn" onclick="toggleCountryDropdown()">
+                    <span id="countryFilterLabel">All Countries</span>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="multi-select-dropdown" style="max-height: 300px; overflow-y: auto;">
+                    <div class="multi-select-option selected" data-value="UK" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇬🇧 United Kingdom</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="SG" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇸🇬 Singapore</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="CH" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇨🇭 Switzerland</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="DE" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇩🇪 Germany</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="FR" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇫🇷 France</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="NL" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇳🇱 Netherlands</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="ES" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇪🇸 Spain</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="IT" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇮🇹 Italy</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="IE" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇮🇪 Ireland</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="US" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇺🇸 United States</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="CA" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇨🇦 Canada</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="AU" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇦🇺 Australia</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="SE" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇸🇪 Sweden</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="DK" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇩🇰 Denmark</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="BE" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇧🇪 Belgium</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="AT" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇦🇹 Austria</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="PT" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇵🇹 Portugal</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="NO" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇳🇴 Norway</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="FI" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇫🇮 Finland</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="HK" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇭🇰 Hong Kong</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="JP" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇯🇵 Japan</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="KR" onclick="toggleCountryOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>🇰🇷 South Korea</span>
+                    </div>
+                </div>
+            </div>
+            <div class="multi-select" id="statusMultiSelect">
+                <button type="button" class="multi-select-btn" onclick="toggleStatusDropdown()">
+                    <span id="statusFilterLabel">All Status</span>
+                    <span class="arrow">▼</span>
+                </button>
+                <div class="multi-select-dropdown" style="max-height: 300px; overflow-y: auto;">
+                    <div class="multi-select-option selected" data-value="Not started" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Not Started</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="In progress" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>In Progress</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="Done" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Applied</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="Accepted" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Accepted</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="Rejected" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Rejected</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="Enrolled" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Enrolled</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="Withdrawn" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Withdrawn</span>
+                    </div>
+                    <div class="multi-select-option selected" data-value="Not interested" onclick="toggleStatusOption(this)">
+                        <div class="multi-select-checkbox"></div>
+                        <span>Not Interested</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container" id="tableView">
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('university')">University <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('programme')">Programme <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('country')">Country <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('deadline')">Deadline <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('status')">Status <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('fee')">Fee <span class="sort-icon">&#8597;</span></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Filled by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Calendar View -->
+        <div class="calendar-container" id="calendarView">
+            <div class="calendar-header">
+                <button class="btn btn-secondary" onclick="changeMonth(-1)">&larr; Prev</button>
+                <h2 id="calendarMonth">January 2026</h2>
+                <button class="btn btn-secondary" onclick="changeMonth(1)">Next &rarr;</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitle">Programme Name</div>
+                    <div class="modal-subtitle" id="modalSubtitle">University Name</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Popup -->
+    <div class="date-popup-overlay" id="datePopupOverlay" onclick="closeDatePopup(event)">
+        <div class="date-popup" onclick="event.stopPropagation()">
+            <div class="date-popup-header">
+                <h3 id="datePopupTitle">March 31, 2026</h3>
+                <button class="modal-close" onclick="closeDatePopup()">&times;</button>
+            </div>
+            <div class="date-popup-body" id="datePopupBody">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add University Modal -->
+    <div class="modal-overlay" id="addModalOverlay" onclick="closeAddModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Add New University</div>
+                    <div class="modal-subtitle">Enter programme details</div>
+                </div>
+                <button class="modal-close" onclick="closeAddModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">University *</div>
+                        <div class="detail-value">
+                            <input type="text" class="edit-input" id="addUniversity" placeholder="e.g. Oxford University">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Programme *</div>
+                        <div class="detail-value">
+                            <input type="text" class="edit-input" id="addProgramme" placeholder="e.g. Management">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">
+                            <select class="edit-input" id="addCountry">
+                                <option value="UK">🇬🇧 United Kingdom</option>
+                                <option value="SG">🇸🇬 Singapore</option>
+                                <option value="CH">🇨🇭 Switzerland</option>
+                                <option value="DE">🇩🇪 Germany</option>
+                                <option value="FR">🇫🇷 France</option>
+                                <option value="NL">🇳🇱 Netherlands</option>
+                                <option value="ES">🇪🇸 Spain</option>
+                                <option value="IT">🇮🇹 Italy</option>
+                                <option value="IE">🇮🇪 Ireland</option>
+                                <option value="US">🇺🇸 United States</option>
+                                <option value="CA">🇨🇦 Canada</option>
+                                <option value="AU">🇦🇺 Australia</option>
+                                <option value="SE">🇸🇪 Sweden</option>
+                                <option value="DK">🇩🇰 Denmark</option>
+                                <option value="BE">🇧🇪 Belgium</option>
+                                <option value="AT">🇦🇹 Austria</option>
+                                <option value="PT">🇵🇹 Portugal</option>
+                                <option value="NO">🇳🇴 Norway</option>
+                                <option value="FI">🇫🇮 Finland</option>
+                                <option value="HK">🇭🇰 Hong Kong</option>
+                                <option value="JP">🇯🇵 Japan</option>
+                                <option value="KR">🇰🇷 South Korea</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <select class="edit-input" id="addStatus">
+                                <option value="Not started">Not Started</option>
+                                <option value="In progress">In Progress</option>
+                                <option value="Done">Applied</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Enrolled">Enrolled</option>
+                                <option value="Withdrawn">Withdrawn</option>
+                                <option value="Not interested">Not Interested</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Deadline</div>
+                        <div class="detail-value">
+                            <input type="date" class="edit-input" id="addDeadline">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Duration (months)</div>
+                        <div class="detail-value">
+                            <input type="number" class="edit-input" id="addDuration" placeholder="12">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fee</div>
+                        <div class="detail-value">
+                            <input type="text" class="edit-input" id="addFee" placeholder="e.g. £30,000">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Start Date</div>
+                        <div class="detail-value">
+                            <input type="date" class="edit-input" id="addStartDate">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section-edit">
+                    <h3>Ranking</h3>
+                    <textarea class="edit-textarea" id="addRanking" rows="2" placeholder="e.g. #50 FT Master in Management"></textarea>
+                </div>
+
+                <div class="detail-section-edit">
+                    <h3>Prerequisites & Requirements</h3>
+                    <textarea class="edit-textarea" id="addPrerequisites" rows="4" placeholder="Entry requirements, English requirements, etc."></textarea>
+                </div>
+
+                <div class="detail-section-edit">
+                    <h3>Notes & Application Rounds</h3>
+                    <textarea class="edit-textarea" id="addNotes" rows="4" placeholder="Programme URL, application rounds, other notes..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                    <button class="btn btn-save" onclick="addNewProgramme()">Add Programme</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Embedded data from CSV
+        const programmes = [
+            {
+                university: "Alliance Manchester Business School",
+                country: "UK",
+                programme: "Management",
+                deadline: "May 3, 2026",
+                ranking: "#96 FT Master in Management\n#56 THE World University (University of Manchester)",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "Bachelor degree with a minimum average of 5/6. \n\nEnglish Requirements:\nWe also require you to meet our https://www.alliancembs.manchester.ac.uk/study/masters/masters-entry-requirements/.\n\nIELTS: 7.0 overall and no other element below 6.5\nTOEFL: 100 overall with a minimum score of 22 in other elements.\nCambridge Proficiency Minimum grade B.\nCambridge Advanced Minimum grade B.",
+                fee: "£33,100",
+                startDate: "",
+                notes: "https://www.alliancembs.manchester.ac.uk/study/masters/msc-management/\n\nRound 1: 7 December 2025\nRound 2: 1 March 2026\nRound 3: 3 May 2026\nRound 4: 5 July 2026"
+            },
+            {
+                university: "Edinburgh Business School",
+                country: "UK",
+                programme: "Entrepreneurship and Innovation",
+                deadline: "April 22, 2026",
+                ranking: "#100 FT Master in Management\n#29 THE World University (University of Edinburgh)",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "2.1 degree\n\nhttps://www.business-school.ed.ac.uk/msc/entrepreneurship-innovation/entry-requirements\n\nEnglish Requirements:\nTOEFL: Total 100 with at least 20 in each component",
+                fee: "£27,100",
+                startDate: "",
+                notes: "https://www.business-school.ed.ac.uk/msc/entrepreneurship-innovation\n\nRound 2: 10 December 2025\nRound 3: 11 February 2026\nRound 4: 22 April 2026\nRound 5: 10 June 2026"
+            },
+            {
+                university: "Imperial College",
+                country: "UK",
+                programme: "Business Analytics & AI",
+                deadline: "May 6, 2026",
+                ranking: "#8 THE World University Ranking\n#29 FT European Business School",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "Bachelor overall mark \n\nEnglish Requirements:\nTOEFL iBT: We accept an overall score of 5.0 (95+) with minimum scores of 5.0 in all elements\n\n24-26 Reading\n22-25 Listening\n25-26 Speaking\n24-26 Writing\n\nFirst or 2:1 in a quantitative subject such as Mathematics, Statistics, Computer science, Engineering, Physics or a quantitative economics degree.",
+                fee: "£47,000",
+                startDate: "September 1, 2026",
+                notes: "https://www.imperial.ac.uk/business-school/masters/business-analytics/\n\nRound 1: 26 November 2025\nRound 2: 4 March 2026\nRound 3: 6 May 2026\nRound 4: 17 June 2026"
+            },
+            {
+                university: "Imperial College",
+                country: "UK",
+                programme: "Financial Technology",
+                deadline: "May 6, 2026",
+                ranking: "#8 THE World University\n#29 FT European Business School",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "",
+                fee: "",
+                startDate: "",
+                notes: "https://www.imperial.ac.uk/business-school/masters/financial-technology/\n\nRound 1: 26 November 2025\nRound 2: 4 March 2026\nRound 3: 6 May 2026\nRound 4: 17 June 2026"
+            },
+            {
+                university: "Nanyang Technological University (NTU)",
+                country: "SG",
+                programme: "Technopreneurship and Innovation",
+                deadline: "January 31, 2026",
+                ranking: "#31 THE World University",
+                duration: 12,
+                status: "Done",
+                prerequisites: "A good bachelor's degree (or equivalent) in any discipline of study from a recognised university or tertiary institution\n\nEnglish Requirements:\nTOEFL/IELTS (Score 92) is required for applicants whose Bachelor programme is not conducted in English. Test dates must be within two years or less from the date of your application.",
+                fee: "S$56,680",
+                startDate: "July 1, 2026",
+                notes: "Application starts at 4 November 2025\n\nhttps://www.ntu.edu.sg/ntupreneur/programmes/postgraduate-programmes/msctip-en\n\nhttps://www.ntu.edu.sg/ntupreneur/programmes/postgraduate-programmes/msctip-en/admission-requirement"
+            },
+            {
+                university: "National University Singapore (NUS)",
+                country: "SG",
+                programme: "Business Analytics",
+                deadline: "January 31, 2026",
+                ranking: "#17 THE World University",
+                duration: 12,
+                status: "Done",
+                prerequisites: "A good Bachelors' degree, preferably from Business, Computing, Economics, Engineering, Mathematics, Science or Statistics, with a good honours classification; or at least 2 years' relevant work experience\n\n(Highly Recommended) A good quantitative score in GRE/GMAT* → But not required\n\nStrong Mathematics foundation",
+                fee: "S$85,000",
+                startDate: "August 1, 2026",
+                notes: "https://msba.nus.edu.sg/programme/"
+            },
+            {
+                university: "National University Singapore (NUS)",
+                country: "SG",
+                programme: "Management of Technology and Innovation",
+                deadline: "February 28, 2026",
+                ranking: "#17 THE World University",
+                duration: 12,
+                status: "Done",
+                prerequisites: "A Bachelor's degree with 2nd class honours or its equivalent in Science, Technology, Engineering or Mathematics (STEM) or business discipline with relevant technology experience from an institution of recognised standing\n\nEnglish Requirements:\nTOEFL > 85\nIELTS > 6.0 \n\nWork experience:\nAt least 1-2 years' preferred.\n\nGMAT or GRE score is highly encouraged (but not required) to be attached with your application to receive priority consideration.",
+                fee: "S$55,590",
+                startDate: "August 1, 2026",
+                notes: "https://cde.nus.edu.sg/isem/masters-of-science-management-of-technology-and-innovation-programme/"
+            },
+            {
+                university: "Kings College London",
+                country: "UK",
+                programme: "Management & Technological Change MSc",
+                deadline: "July 25, 2026",
+                ranking: "#38 THE World University Ranking",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "2.1 degree at Undergraduate (mindestens 5.0 Schnitt)\n\nIf you have a lower degree classification, or a degree in an unrelated subject, your application may be considered if you can demonstrate significant relevant work experience, or offer a related graduate qualification (such as a Masters or PGDip).\n\nEnglish Requirements:\nTOEFL → 100 overall with a minimum of 25 in writing and 23 in each of the other skills\nhttps://www.kcl.ac.uk/study/postgraduate-taught/how-to-apply/entry-requirements/english-language-requirements#section-3",
+                fee: "£38,300",
+                startDate: "September 1, 2026",
+                notes: "https://www.kcl.ac.uk/study/postgraduate-taught/courses/management-technological-change\n\nOur first application deadline is on 9 March 2026 (23:59 UK time). The final application deadlines for this programme are:\n• Overseas (international) fee status: 25 July 2026 (23:59 UK time)\n\nAfter the first application deadline in March:\n• if the programme is not yet full, we will continue to accept applications until all available places are filled up to the final application deadlines above\n• if the programme becomes full before the final application deadlines stated above, we will close the programme to further applications"
+            },
+            {
+                university: "HSG",
+                country: "CH",
+                programme: "Business Innovation",
+                deadline: "March 31, 2026",
+                ranking: "#9 FT Business School (EU)",
+                duration: 36,
+                status: "Not started",
+                prerequisites: "- mindestens teilweise fachähnlicher Bachelor-Abschluss einer Schweizer Universität\n\n- betriebswirtschaftlicher (fachähnlicher) Bachelor-Abschluss einer Schweizer Fachhochschule mit einem Mindestnotenschnitt von 5.00 im Abschlusszeugnis und maximal 20 ECTS Credits von 180 ECTS Credits an Praktikumsleistungen.",
+                fee: "",
+                startDate: "October 1, 2026",
+                notes: "https://www.unisg.ch/de/studium/programme/master/business-innovation-mbi/\n\nTeilweise fachähnlicher universitärer Bachelor-Abschluss: \n60 ECTS Credits in zwei der drei Kernbereiche Betriebswirtschaftslehre, Volkswirtschaftslehre und Recht, davon mindestens 30 ECTS Credits in Betriebswirtschaftslehre und mindestens 15 ECTS Credits in Volkswirtschaftslehre oder Recht, zusätzlich mindestens 6 ECTS Credits in Mathematik/Statistik \n\nFür die Prüfung der (teilweisen) Fachähnlichkeit werden ausschliesslich curriculare Credits eines abgeschlossenen Studiums berücksichtigt.\nÜberschüssige Leistungen (fakultative Leistungen) werden nicht berücksichtigt. Als Vergleichsbasis dienen die Pflichtleistungen des entsprechenden HSG Bachelor-Studiengangs."
+            },
+            {
+                university: "Nanyang Technological University (NTU)",
+                country: "SG",
+                programme: "Management",
+                deadline: "March 31, 2026",
+                ranking: "#31 THE World University",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "https://www.ntu.edu.sg/business/admissions/graduate-studies/master-in-management/admissions\n\nA good bachelor's degree from any discipline\n\nGMAT or GRE score is optional\n\nEnglish Requirements:\nTOEFL score >100 iBT; IELTS score > 6.5, if English was not the medium of instruction at the undergraduate level\n\nWork experience is optional",
+                fee: "S$67,580",
+                startDate: "July 1, 2026",
+                notes: "https://www.ntu.edu.sg/business/admissions/graduate-studies/master-in-management/home\n\nRound 1: 1 November 2025\nRound 2: 31 January 2026\nRound 3: 31 March 2026"
+            },
+            {
+                university: "ZHAW",
+                country: "CH",
+                programme: "Innovation and Entrepreneurship",
+                deadline: "May 30, 2026",
+                ranking: "#58 FT Master in Management (Worldwide)\n#62 FT Business School (EU)",
+                duration: 24,
+                status: "Not started",
+                prerequisites: "",
+                fee: "",
+                startDate: "September 1, 2026",
+                notes: "https://www.zhaw.ch/de/sml/studium/master/business-administration-innovation-and-entrepreneurship"
+            },
+            {
+                university: "ZHAW",
+                country: "CH",
+                programme: "Wirtschaftsinformatik",
+                deadline: "May 30, 2026",
+                ranking: "#58 FT Master in Management (Worldwide)\n#62 FT Business School (EU)",
+                duration: 24,
+                status: "Not started",
+                prerequisites: "",
+                fee: "",
+                startDate: "September 1, 2026",
+                notes: "https://www.zhaw.ch/de/sml/studium/master/wirtschaftsinformatik"
+            },
+            {
+                university: "Singapore Management University (SMU)",
+                country: "SG",
+                programme: "Master of IT in Business",
+                deadline: "May 31, 2026",
+                ranking: "#64 FT Master in Management",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "Bachelor's Degree\n\nGMAT or \nGRE or \nSMU Admissions Test\n\nEnglish Requirements:\nTOEFL / IELTS (Waived if English was the medium of instruction for your undergraduate studies.)",
+                fee: "S$54,500",
+                startDate: "August 1, 2026",
+                notes: "https://masters.smu.edu.sg/programme/master-of-it-in-business"
+            },
+            {
+                university: "Singapore Management University (SMU)",
+                country: "SG",
+                programme: "Management",
+                deadline: "May 31, 2026",
+                ranking: "#64 FT Master in Management",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "Bachelor's Degree\n\nGMAT or\nGRE or \nSMU Admissions Test\n\nEnglish Requirements:\nTOEFL / IELTS (Waived if English was the medium of instruction for your undergraduate studies.)",
+                fee: "S$59,950",
+                startDate: "August 1, 2026",
+                notes: "https://masters.smu.edu.sg/programme/msc-in-management"
+            },
+            {
+                university: "Warwick Business School",
+                country: "UK",
+                programme: "Management",
+                deadline: "August 2, 2026",
+                ranking: "#40 FT Master in Management",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "2.1 degree at Undergraduate (mindestens 5.0 Schnitt)\n\nEnglish Requirements:\nCAE 190 Score Overall\nCPE 190 Score Overall\nTOEFL: 100 (Minimum language components L21, R22, W21, S23)",
+                fee: "£30,320",
+                startDate: "September 1, 2026",
+                notes: "https://www.wbs.ac.uk/courses/masters/management/"
+            },
+            {
+                university: "Lancaster University Management School",
+                country: "UK",
+                programme: "Management",
+                deadline: "March 31, 2026",
+                ranking: "#88 FT Master in Management\n#184 THE World University (Lancaster University)",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "2:2 degree\n\nEnglish Requirements:\nIELTS (Academic) Test with an overall score of at least 6.5, and a minimum of 6.0 in each element of the test",
+                fee: "£30,000",
+                startDate: "",
+                notes: "https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/management-msc/2026/"
+            },
+            {
+                university: "Lancaster University Management School",
+                country: "UK",
+                programme: "Management and AI",
+                deadline: "March 31, 2026",
+                ranking: "#88 FT Master in Management\n#184 THE World University (Lancaster University)",
+                duration: 12,
+                status: "Not started",
+                prerequisites: "2:2 degree\n\nEnglish Requirements:\nIELTS (Academic) Test with an overall score of at least 6.5, and a minimum of 6.0 in each element of the test",
+                fee: "£28,000",
+                startDate: "",
+                notes: "https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/management-and-artificial-intelligence-msc/2026/"
+            },
+            {
+                university: "Sungkyunkwan University (SKKU)",
+                country: "SG",
+                programme: "",
+                deadline: "",
+                ranking: "",
+                duration: null,
+                status: "Not started",
+                prerequisites: "",
+                fee: "",
+                startDate: "",
+                notes: ""
+            },
+            {
+                university: "National University Singapore (NUS)",
+                country: "SG",
+                programme: "Real Estate",
+                deadline: "June 30, 2026",
+                ranking: "#17 World University Ranking",
+                duration: 12,
+                status: "Done",
+                prerequisites: "",
+                fee: "",
+                startDate: "January 1, 2027",
+                notes: ""
+            },
+            {
+                university: "Imperial College",
+                country: "UK",
+                programme: "Innovation, Entrepreneurship & Management",
+                deadline: "September 28, 2025",
+                ranking: "",
+                duration: 12,
+                status: "Done",
+                prerequisites: "",
+                fee: "£42,500",
+                startDate: "September 1, 2026",
+                notes: ""
+            },
+            {
+                university: "Imperial College",
+                country: "UK",
+                programme: "Management",
+                deadline: "September 28, 2025",
+                ranking: "#8 World University Ranking",
+                duration: 12,
+                status: "Done",
+                prerequisites: "",
+                fee: "£44,000",
+                startDate: "September 1, 2026",
+                notes: ""
+            },
+            {
+                university: "University College London (UCL)",
+                country: "UK",
+                programme: "Management of Complex Projects",
+                deadline: "June 26, 2026",
+                ranking: "#22 World University Ranking",
+                duration: 12,
+                status: "Done",
+                prerequisites: "Bachelor overall mark 4.5/6.0\n\nThe English language level for this course is: Level 2\n\nhttps://www.ucl.ac.uk/languages-international-education/preparation-courses are for international students who are aiming to study for a postgraduate degree at UCL. The courses will develop your academic English and academic skills required to succeed at postgraduate level.",
+                fee: "To be confirmed",
+                startDate: "September 1, 2026",
+                notes: ""
+            }
+        ];
+
+        // Load saved data from localStorage
+        function loadSavedData() {
+            // Load full programme data
+            const savedData = localStorage.getItem('programmeData');
+            if (savedData) {
+                const allData = JSON.parse(savedData);
+                programmes.forEach((p) => {
+                    const key = `${p.university}|${p.programme}`;
+                    if (allData[key]) {
+                        const data = allData[key];
+                        if (data.status !== undefined) p.status = data.status;
+                        if (data.deadline !== undefined) p.deadline = data.deadline;
+                        if (data.duration !== undefined) p.duration = data.duration;
+                        if (data.fee !== undefined) p.fee = data.fee;
+                        if (data.startDate !== undefined) p.startDate = data.startDate;
+                        if (data.country !== undefined) p.country = data.country;
+                        if (data.ranking !== undefined) p.ranking = data.ranking;
+                        if (data.prerequisites !== undefined) p.prerequisites = data.prerequisites;
+                        if (data.notes !== undefined) p.notes = data.notes;
+                    }
+                });
+            } else {
+                // Fallback: load old status-only data for backwards compatibility
+                const savedStatuses = localStorage.getItem('programmeStatuses');
+                if (savedStatuses) {
+                    const statuses = JSON.parse(savedStatuses);
+                    programmes.forEach((p) => {
+                        const key = `${p.university}|${p.programme}`;
+                        if (statuses[key] !== undefined) {
+                            p.status = statuses[key];
+                        }
+                    });
+                }
+            }
+
+            // Load added programmes (user-created entries)
+            const addedProgrammes = JSON.parse(localStorage.getItem('addedProgrammes') || '[]');
+            addedProgrammes.forEach(ap => {
+                // Check if already exists in programmes array
+                const exists = programmes.some(p =>
+                    p.university === ap.university && p.programme === ap.programme
+                );
+                if (!exists) {
+                    programmes.push(ap);
+                }
+            });
+
+            // Remove deleted programmes
+            const deletedProgrammes = JSON.parse(localStorage.getItem('deletedProgrammes') || '[]');
+            for (let i = programmes.length - 1; i >= 0; i--) {
+                const key = `${programmes[i].university}|${programmes[i].programme}`;
+                if (deletedProgrammes.includes(key)) {
+                    programmes.splice(i, 1);
+                }
+            }
+        }
+
+        // Load saved data on startup
+        loadSavedData();
+
+        // State
+        let filteredProgrammes = [...programmes];
+        let currentSort = { column: null, direction: 'asc' };
+        let currentMonth = new Date(2026, 0, 1); // January 2026
+        let currentView = 'table';
+        let currentModalIndex = null;
+
+        // Country flags
+        const countryFlags = {
+            'UK': '🇬🇧',
+            'SG': '🇸🇬',
+            'CH': '🇨🇭',
+            'DE': '🇩🇪',
+            'FR': '🇫🇷',
+            'NL': '🇳🇱',
+            'ES': '🇪🇸',
+            'IT': '🇮🇹',
+            'IE': '🇮🇪',
+            'US': '🇺🇸',
+            'CA': '🇨🇦',
+            'AU': '🇦🇺',
+            'SE': '🇸🇪',
+            'DK': '🇩🇰',
+            'BE': '🇧🇪',
+            'AT': '🇦🇹',
+            'HK': '🇭🇰',
+            'JP': '🇯🇵',
+            'KR': '🇰🇷',
+            'PT': '🇵🇹',
+            'NO': '🇳🇴',
+            'FI': '🇫🇮'
+        };
+
+        const countryNames = {
+            'UK': 'United Kingdom',
+            'SG': 'Singapore',
+            'CH': 'Switzerland',
+            'DE': 'Germany',
+            'FR': 'France',
+            'NL': 'Netherlands',
+            'ES': 'Spain',
+            'IT': 'Italy',
+            'IE': 'Ireland',
+            'US': 'United States',
+            'CA': 'Canada',
+            'AU': 'Australia',
+            'SE': 'Sweden',
+            'DK': 'Denmark',
+            'BE': 'Belgium',
+            'AT': 'Austria',
+            'HK': 'Hong Kong',
+            'JP': 'Japan',
+            'KR': 'South Korea',
+            'PT': 'Portugal',
+            'NO': 'Norway',
+            'FI': 'Finland'
+        };
+
+        // Parse date
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const date = new Date(dateStr);
+            return isNaN(date.getTime()) ? null : date;
+        }
+
+        // Days until deadline
+        function daysUntil(dateStr) {
+            const date = parseDate(dateStr);
+            if (!date) return null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const diffTime = date.getTime() - today.getTime();
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = parseDate(dateStr);
+            if (!date) return '-';
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // Get status display info
+        function getStatusInfo(status) {
+            switch (status) {
+                case 'In progress':
+                    return { class: 'status-in-progress', text: 'In Progress' };
+                case 'Done':
+                    return { class: 'status-done', text: 'Applied' };
+                case 'Accepted':
+                    return { class: 'status-accepted', text: 'Accepted' };
+                case 'Rejected':
+                    return { class: 'status-rejected', text: 'Rejected' };
+                case 'Enrolled':
+                    return { class: 'status-enrolled', text: 'Enrolled' };
+                case 'Withdrawn':
+                    return { class: 'status-withdrawn', text: 'Withdrawn' };
+                case 'Not interested':
+                    return { class: 'status-not-interested', text: 'Not Interested' };
+                default:
+                    return { class: 'status-pending', text: 'Not Started' };
+            }
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const total = programmes.filter(p => p.programme).length;
+            const notStarted = programmes.filter(p => p.status === 'Not started' && p.programme).length;
+            const inProgress = programmes.filter(p => p.status === 'In progress').length;
+            const applied = programmes.filter(p => p.status === 'Done').length;
+            const accepted = programmes.filter(p => p.status === 'Accepted').length;
+            const rejected = programmes.filter(p => p.status === 'Rejected').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('notStartedCount').textContent = notStarted;
+            document.getElementById('inProgressCount').textContent = inProgress;
+            document.getElementById('appliedCount').textContent = applied;
+            document.getElementById('acceptedCount').textContent = accepted;
+            document.getElementById('rejectedCount').textContent = rejected;
+
+            // Generate country cards dynamically
+            const countryCounts = {};
+            programmes.forEach(p => {
+                if (p.country) {
+                    countryCounts[p.country] = (countryCounts[p.country] || 0) + 1;
+                }
+            });
+
+            // Sort countries by count (descending)
+            const sortedCountries = Object.entries(countryCounts)
+                .sort((a, b) => b[1] - a[1]);
+
+            // Remove old country cards
+            document.querySelectorAll('.country-card').forEach(el => el.remove());
+
+            // Add new country cards
+            const dashboard = document.getElementById('dashboardGrid');
+            sortedCountries.forEach(([code, count]) => {
+                const card = document.createElement('div');
+                card.className = 'card country-card';
+                card.innerHTML = `
+                    <div class="card-label">${countryFlags[code] || ''} ${countryNames[code] || code}</div>
+                    <div class="card-value">${count}</div>
+                `;
+                dashboard.appendChild(card);
+            });
+
+            // Upcoming deadlines (pending and in-progress applications)
+            const upcoming = programmes
+                .filter(p => p.deadline && (p.status === 'Not started' || p.status === 'In progress'))
+                .map(p => ({ ...p, days: daysUntil(p.deadline) }))
+                .filter(p => p.days !== null && p.days > 0)
+                .sort((a, b) => a.days - b.days)
+                .slice(0, 5);
+
+            const deadlinesContainer = document.getElementById('upcomingDeadlines');
+            if (upcoming.length === 0) {
+                deadlinesContainer.innerHTML = '<p style="color: var(--text-muted);">No upcoming deadlines</p>';
+            } else {
+                deadlinesContainer.innerHTML = upcoming.map(p => {
+                    let urgencyClass = 'ok';
+                    if (p.days <= 14) urgencyClass = 'urgent';
+                    else if (p.days <= 60) urgencyClass = 'soon';
+
+                    return `
+                        <div class="deadline-item" onclick="openModal(${programmes.indexOf(programmes.find(prog => prog.university === p.university && prog.programme === p.programme))})">
+                            <div class="deadline-info">
+                                <div class="deadline-uni">${countryFlags[p.country] || ''} ${p.university}</div>
+                                <div class="deadline-program">${p.programme}</div>
+                            </div>
+                            <div class="deadline-days ${urgencyClass}">${p.days} days</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Render table
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+
+            if (filteredProgrammes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <h3>No programmes found</h3>
+                                <p>Try adjusting your filters</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredProgrammes.map((p, index) => {
+                const originalIndex = programmes.indexOf(p);
+                const statusInfo = getStatusInfo(p.status);
+                const statusClass = statusInfo.class;
+                const statusText = statusInfo.text;
+
+                return `
+                    <tr onclick="openModal(${originalIndex})">
+                        <td>${countryFlags[p.country] || ''} ${p.university}</td>
+                        <td>${p.programme || '-'}</td>
+                        <td>${countryNames[p.country] || p.country}</td>
+                        <td>${formatDate(p.deadline)}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>${p.fee || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Sort table
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+
+            filteredProgrammes.sort((a, b) => {
+                let valA, valB;
+
+                switch (column) {
+                    case 'university':
+                        valA = a.university.toLowerCase();
+                        valB = b.university.toLowerCase();
+                        break;
+                    case 'programme':
+                        valA = (a.programme || '').toLowerCase();
+                        valB = (b.programme || '').toLowerCase();
+                        break;
+                    case 'country':
+                        valA = a.country;
+                        valB = b.country;
+                        break;
+                    case 'deadline':
+                        valA = parseDate(a.deadline) || new Date(9999, 0, 1);
+                        valB = parseDate(b.deadline) || new Date(9999, 0, 1);
+                        break;
+                    case 'status':
+                        valA = a.status;
+                        valB = b.status;
+                        break;
+                    case 'fee':
+                        valA = a.fee ? parseFloat(a.fee.replace(/[^0-9.]/g, '')) : 0;
+                        valB = b.fee ? parseFloat(b.fee.replace(/[^0-9.]/g, '')) : 0;
+                        break;
+                }
+
+                if (valA < valB) return currentSort.direction === 'asc' ? -1 : 1;
+                if (valA > valB) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            renderTable();
+        }
+
+        // Toggle status dropdown
+        function toggleStatusDropdown() {
+            document.getElementById('statusMultiSelect').classList.toggle('open');
+            document.getElementById('countryMultiSelect').classList.remove('open');
+        }
+
+        // Toggle status option
+        function toggleStatusOption(option) {
+            option.classList.toggle('selected');
+            updateStatusLabel();
+            applyFilters();
+        }
+
+        // Get selected statuses
+        function getSelectedStatuses() {
+            const options = document.querySelectorAll('#statusMultiSelect .multi-select-option.selected');
+            return Array.from(options).map(opt => opt.dataset.value);
+        }
+
+        // Update status filter label
+        function updateStatusLabel() {
+            const selected = getSelectedStatuses();
+            const label = document.getElementById('statusFilterLabel');
+            const totalStatuses = 8; // Total number of status options
+
+            if (selected.length === 0 || selected.length === totalStatuses) {
+                label.textContent = 'All Status';
+            } else if (selected.length === 1) {
+                const names = {
+                    'Not started': 'Not Started',
+                    'In progress': 'In Progress',
+                    'Done': 'Applied',
+                    'Accepted': 'Accepted',
+                    'Rejected': 'Rejected',
+                    'Enrolled': 'Enrolled',
+                    'Withdrawn': 'Withdrawn',
+                    'Not interested': 'Not Interested'
+                };
+                label.textContent = names[selected[0]];
+            } else {
+                label.textContent = `${selected.length} statuses`;
+            }
+        }
+
+        // Toggle country dropdown
+        function toggleCountryDropdown() {
+            document.getElementById('countryMultiSelect').classList.toggle('open');
+            document.getElementById('statusMultiSelect').classList.remove('open');
+        }
+
+        // Toggle country option
+        function toggleCountryOption(option) {
+            option.classList.toggle('selected');
+            updateCountryLabel();
+            applyFilters();
+        }
+
+        // Get selected countries
+        function getSelectedCountries() {
+            const options = document.querySelectorAll('#countryMultiSelect .multi-select-option.selected');
+            return Array.from(options).map(opt => opt.dataset.value);
+        }
+
+        // Update country filter label
+        function updateCountryLabel() {
+            const selected = getSelectedCountries();
+            const label = document.getElementById('countryFilterLabel');
+            const totalCountries = document.querySelectorAll('#countryMultiSelect .multi-select-option').length;
+
+            if (selected.length === 0 || selected.length === totalCountries) {
+                label.textContent = 'All Countries';
+            } else if (selected.length === 1) {
+                label.textContent = countryNames[selected[0]] || selected[0];
+            } else {
+                label.textContent = `${selected.length} countries`;
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            const countrySelect = document.getElementById('countryMultiSelect');
+            const statusSelect = document.getElementById('statusMultiSelect');
+
+            if (countrySelect && !countrySelect.contains(e.target)) {
+                countrySelect.classList.remove('open');
+            }
+            if (statusSelect && !statusSelect.contains(e.target)) {
+                statusSelect.classList.remove('open');
+            }
+        });
+
+        // Apply filters
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCountries = getSelectedCountries();
+            const selectedStatuses = getSelectedStatuses();
+
+            filteredProgrammes = programmes.filter(p => {
+                const matchesSearch = !search ||
+                    p.university.toLowerCase().includes(search) ||
+                    (p.programme && p.programme.toLowerCase().includes(search));
+                const matchesCountry = selectedCountries.length === 0 || selectedCountries.includes(p.country);
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(p.status);
+
+                return matchesSearch && matchesCountry && matchesStatus;
+            });
+
+            // Re-apply current sort if one is set
+            if (currentSort.column) {
+                applySorting();
+            }
+
+            renderTable();
+            renderCalendar();
+        }
+
+        // Apply current sorting without changing sort direction
+        function applySorting() {
+            if (!currentSort.column) return;
+
+            const column = currentSort.column;
+            filteredProgrammes.sort((a, b) => {
+                let valA, valB;
+
+                switch (column) {
+                    case 'university':
+                        valA = a.university.toLowerCase();
+                        valB = b.university.toLowerCase();
+                        break;
+                    case 'programme':
+                        valA = (a.programme || '').toLowerCase();
+                        valB = (b.programme || '').toLowerCase();
+                        break;
+                    case 'country':
+                        valA = a.country;
+                        valB = b.country;
+                        break;
+                    case 'deadline':
+                        valA = parseDate(a.deadline) || new Date(9999, 0, 1);
+                        valB = parseDate(b.deadline) || new Date(9999, 0, 1);
+                        break;
+                    case 'status':
+                        valA = a.status;
+                        valB = b.status;
+                        break;
+                    case 'fee':
+                        valA = a.fee ? parseFloat(a.fee.replace(/[^0-9.]/g, '')) : 0;
+                        valB = b.fee ? parseFloat(b.fee.replace(/[^0-9.]/g, '')) : 0;
+                        break;
+                }
+
+                if (valA < valB) return currentSort.direction === 'asc' ? -1 : 1;
+                if (valA > valB) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Set view
+        function setView(view) {
+            currentView = view;
+            document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+            document.getElementById('calendarView').className = view === 'calendar' ? 'calendar-container active' : 'calendar-container';
+            document.getElementById('tableViewBtn').className = view === 'table' ? 'btn btn-secondary active' : 'btn btn-secondary';
+            document.getElementById('calendarViewBtn').className = view === 'calendar' ? 'btn btn-secondary active' : 'btn btn-secondary';
+
+            if (view === 'calendar') {
+                renderCalendar();
+            }
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+
+            document.getElementById('calendarMonth').textContent =
+                currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            const grid = document.getElementById('calendarGrid');
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            let html = days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+
+                const isOtherMonth = date.getMonth() !== month;
+                const isToday = date.getTime() === today.getTime();
+
+                // Find programmes with deadlines on this date
+                const dayProgrammes = filteredProgrammes.filter(p => {
+                    const deadline = parseDate(p.deadline);
+                    return deadline &&
+                           deadline.getDate() === date.getDate() &&
+                           deadline.getMonth() === date.getMonth() &&
+                           deadline.getFullYear() === date.getFullYear();
+                });
+
+                let classes = 'calendar-day';
+                if (isOtherMonth) classes += ' other-month';
+                if (isToday) classes += ' today';
+
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                const clickHandler = dayProgrammes.length > 0 ? `onclick="openDatePopup('${dateStr}')"` : '';
+
+                html += `
+                    <div class="${classes}" ${clickHandler}>
+                        <div class="day-number">${date.getDate()}</div>
+                        <div class="day-events">
+                            ${dayProgrammes.slice(0, 2).map(p => {
+                                let eventClass = 'pending';
+                                if (p.status === 'In progress') eventClass = 'in-progress';
+                                else if (p.status === 'Done') eventClass = 'done';
+                                else if (p.status === 'Accepted') eventClass = 'accepted';
+                                else if (p.status === 'Rejected') eventClass = 'rejected';
+                                else if (p.status === 'Enrolled') eventClass = 'enrolled';
+                                else if (p.status === 'Withdrawn') eventClass = 'withdrawn';
+                                else if (p.status === 'Not interested') eventClass = 'not-interested';
+                                return `<div class="day-event ${eventClass}">${p.university}</div>`;
+                            }).join('')}
+                            ${dayProgrammes.length > 2 ? `<div class="day-event" style="background: var(--border);">+${dayProgrammes.length - 2} more</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        // Change month
+        function changeMonth(delta) {
+            currentMonth.setMonth(currentMonth.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // Open date popup
+        function openDatePopup(dateStr) {
+            const parts = dateStr.split('-');
+            const year = parseInt(parts[0]);
+            const month = parseInt(parts[1]) - 1;
+            const day = parseInt(parts[2]);
+            const date = new Date(year, month, day);
+
+            const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            document.getElementById('datePopupTitle').textContent = formattedDate;
+
+            // Find programmes with deadlines on this date
+            const dayProgrammes = programmes.filter(p => {
+                const deadline = parseDate(p.deadline);
+                return deadline &&
+                       deadline.getDate() === day &&
+                       deadline.getMonth() === month &&
+                       deadline.getFullYear() === year;
+            });
+
+            document.getElementById('datePopupBody').innerHTML = dayProgrammes.map(p => {
+                const originalIndex = programmes.indexOf(p);
+                const statusInfo = getStatusInfo(p.status);
+                return `
+                    <div class="date-programme-item" onclick="closeDatePopup(); openModal(${originalIndex});">
+                        <div class="date-programme-info">
+                            <div class="date-programme-uni">${countryFlags[p.country] || ''} ${p.university}</div>
+                            <div class="date-programme-name">${p.programme || 'No programme name'}</div>
+                        </div>
+                        <span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('datePopupOverlay').classList.add('active');
+        }
+
+        // Close date popup
+        function closeDatePopup(event) {
+            if (!event || event.target === document.getElementById('datePopupOverlay')) {
+                document.getElementById('datePopupOverlay').classList.remove('active');
+            }
+        }
+
+        // Open modal
+        function openModal(index) {
+            currentModalIndex = index;
+            const p = programmes[index];
+
+            document.getElementById('modalTitle').textContent = p.programme || 'No Programme Name';
+            document.getElementById('modalSubtitle').textContent = `${countryFlags[p.country] || ''} ${p.university}`;
+
+            // Extract URLs from notes
+            const urlRegex = /(https?:\/\/[^\s\n]+)/g;
+            const urls = (p.notes || '').match(urlRegex) || [];
+            const programmeUrl = urls[0] || '';
+
+            const statusInfo = getStatusInfo(p.status);
+
+            // Convert deadline to input date format (YYYY-MM-DD)
+            const deadlineDate = parseDate(p.deadline);
+            const deadlineValue = deadlineDate ? deadlineDate.toISOString().split('T')[0] : '';
+
+            // Convert start date to input date format
+            const startDateParsed = parseDate(p.startDate);
+            const startDateValue = startDateParsed ? startDateParsed.toISOString().split('T')[0] : '';
+
+            document.getElementById('modalBody').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <select class="status-select ${statusInfo.class}" id="editStatus" onchange="updateStatusStyle(this)">
+                                <option value="Not started" ${p.status === 'Not started' ? 'selected' : ''}>Not Started</option>
+                                <option value="In progress" ${p.status === 'In progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="Done" ${p.status === 'Done' ? 'selected' : ''}>Applied</option>
+                                <option value="Accepted" ${p.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                <option value="Rejected" ${p.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                <option value="Enrolled" ${p.status === 'Enrolled' ? 'selected' : ''}>Enrolled</option>
+                                <option value="Withdrawn" ${p.status === 'Withdrawn' ? 'selected' : ''}>Withdrawn</option>
+                                <option value="Not interested" ${p.status === 'Not interested' ? 'selected' : ''}>Not Interested</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Deadline</div>
+                        <div class="detail-value">
+                            <input type="date" class="edit-input" id="editDeadline" value="${deadlineValue}">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Duration (months)</div>
+                        <div class="detail-value">
+                            <input type="number" class="edit-input" id="editDuration" value="${p.duration || ''}" placeholder="12">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fee</div>
+                        <div class="detail-value">
+                            <input type="text" class="edit-input" id="editFee" value="${p.fee || ''}" placeholder="£30,000">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Start Date</div>
+                        <div class="detail-value">
+                            <input type="date" class="edit-input" id="editStartDate" value="${startDateValue}">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">
+                            <select class="edit-input" id="editCountry">
+                                <option value="UK" ${p.country === 'UK' ? 'selected' : ''}>🇬🇧 United Kingdom</option>
+                                <option value="SG" ${p.country === 'SG' ? 'selected' : ''}>🇸🇬 Singapore</option>
+                                <option value="CH" ${p.country === 'CH' ? 'selected' : ''}>🇨🇭 Switzerland</option>
+                                <option value="DE" ${p.country === 'DE' ? 'selected' : ''}>🇩🇪 Germany</option>
+                                <option value="FR" ${p.country === 'FR' ? 'selected' : ''}>🇫🇷 France</option>
+                                <option value="NL" ${p.country === 'NL' ? 'selected' : ''}>🇳🇱 Netherlands</option>
+                                <option value="ES" ${p.country === 'ES' ? 'selected' : ''}>🇪🇸 Spain</option>
+                                <option value="IT" ${p.country === 'IT' ? 'selected' : ''}>🇮🇹 Italy</option>
+                                <option value="IE" ${p.country === 'IE' ? 'selected' : ''}>🇮🇪 Ireland</option>
+                                <option value="US" ${p.country === 'US' ? 'selected' : ''}>🇺🇸 United States</option>
+                                <option value="CA" ${p.country === 'CA' ? 'selected' : ''}>🇨🇦 Canada</option>
+                                <option value="AU" ${p.country === 'AU' ? 'selected' : ''}>🇦🇺 Australia</option>
+                                <option value="SE" ${p.country === 'SE' ? 'selected' : ''}>🇸🇪 Sweden</option>
+                                <option value="DK" ${p.country === 'DK' ? 'selected' : ''}>🇩🇰 Denmark</option>
+                                <option value="BE" ${p.country === 'BE' ? 'selected' : ''}>🇧🇪 Belgium</option>
+                                <option value="AT" ${p.country === 'AT' ? 'selected' : ''}>🇦🇹 Austria</option>
+                                <option value="PT" ${p.country === 'PT' ? 'selected' : ''}>🇵🇹 Portugal</option>
+                                <option value="NO" ${p.country === 'NO' ? 'selected' : ''}>🇳🇴 Norway</option>
+                                <option value="FI" ${p.country === 'FI' ? 'selected' : ''}>🇫🇮 Finland</option>
+                                <option value="HK" ${p.country === 'HK' ? 'selected' : ''}>🇭🇰 Hong Kong</option>
+                                <option value="JP" ${p.country === 'JP' ? 'selected' : ''}>🇯🇵 Japan</option>
+                                <option value="KR" ${p.country === 'KR' ? 'selected' : ''}>🇰🇷 South Korea</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section-edit">
+                    <h3>Ranking</h3>
+                    <textarea class="edit-textarea" id="editRanking" rows="2" placeholder="e.g. #50 FT Master in Management">${p.ranking || ''}</textarea>
+                </div>
+
+                <div class="detail-section-edit">
+                    <h3>Prerequisites & Requirements</h3>
+                    <textarea class="edit-textarea" id="editPrerequisites" rows="4" placeholder="Entry requirements, English requirements, etc.">${p.prerequisites || ''}</textarea>
+                </div>
+
+                <div class="detail-section-edit">
+                    <h3>Notes & Application Rounds</h3>
+                    <textarea class="edit-textarea" id="editNotes" rows="4" placeholder="Programme URL, application rounds, other notes...">${p.notes || ''}</textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-delete" onclick="deleteProgramme()">Delete</button>
+                    <div style="flex: 1;"></div>
+                    ${programmeUrl ? `<a href="${programmeUrl}" target="_blank" class="btn btn-secondary">Visit Website →</a>` : ''}
+                    <button class="btn btn-save" onclick="saveChanges()">Save Changes</button>
+                </div>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        // Update status dropdown styling
+        function updateStatusStyle(select) {
+            const statusInfo = getStatusInfo(select.value);
+            select.className = 'status-select ' + statusInfo.class;
+        }
+
+        // Save all changes from modal
+        function saveChanges() {
+            if (currentModalIndex === null) return;
+
+            const p = programmes[currentModalIndex];
+
+            // Get values from form
+            const newStatus = document.getElementById('editStatus').value;
+            const newDeadline = document.getElementById('editDeadline').value;
+            const newDuration = document.getElementById('editDuration').value;
+            const newFee = document.getElementById('editFee').value;
+            const newStartDate = document.getElementById('editStartDate').value;
+            const newCountry = document.getElementById('editCountry').value;
+            const newRanking = document.getElementById('editRanking').value;
+            const newPrerequisites = document.getElementById('editPrerequisites').value;
+            const newNotes = document.getElementById('editNotes').value;
+
+            // Format dates for display
+            const formatDateForStorage = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            };
+
+            // Update programme object
+            p.status = newStatus;
+            p.deadline = formatDateForStorage(newDeadline);
+            p.duration = newDuration ? parseInt(newDuration) : null;
+            p.fee = newFee;
+            p.startDate = formatDateForStorage(newStartDate);
+            p.country = newCountry;
+            p.ranking = newRanking;
+            p.prerequisites = newPrerequisites;
+            p.notes = newNotes;
+
+            // Save to localStorage
+            const key = `${p.university}|${p.programme}`;
+            const saved = localStorage.getItem('programmeData');
+            const allData = saved ? JSON.parse(saved) : {};
+            allData[key] = {
+                status: p.status,
+                deadline: p.deadline,
+                duration: p.duration,
+                fee: p.fee,
+                startDate: p.startDate,
+                country: p.country,
+                ranking: p.ranking,
+                prerequisites: p.prerequisites,
+                notes: p.notes
+            };
+            localStorage.setItem('programmeData', JSON.stringify(allData));
+
+            // Also update the old status-only storage for backwards compatibility
+            const statusSaved = localStorage.getItem('programmeStatuses');
+            const statuses = statusSaved ? JSON.parse(statusSaved) : {};
+            statuses[key] = p.status;
+            localStorage.setItem('programmeStatuses', JSON.stringify(statuses));
+
+            // Update modal title/subtitle in case country changed
+            document.getElementById('modalSubtitle').textContent = `${countryFlags[p.country] || ''} ${p.university}`;
+
+            // Refresh UI
+            updateDashboard();
+            applyFilters();
+
+            // Show confirmation
+            const saveBtn = document.querySelector('.btn-save');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saved!';
+            saveBtn.style.background = '#15803d';
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.style.background = '';
+            }, 1500);
+        }
+
+        // Delete programme
+        function deleteProgramme() {
+            if (currentModalIndex === null) return;
+
+            const p = programmes[currentModalIndex];
+            const confirmDelete = confirm(`Are you sure you want to delete "${p.programme}" at ${p.university}?`);
+
+            if (!confirmDelete) return;
+
+            // Remove from localStorage
+            const key = `${p.university}|${p.programme}`;
+            const saved = localStorage.getItem('programmeData');
+            if (saved) {
+                const allData = JSON.parse(saved);
+                delete allData[key];
+                localStorage.setItem('programmeData', JSON.stringify(allData));
+            }
+
+            // Remove from status storage
+            const statusSaved = localStorage.getItem('programmeStatuses');
+            if (statusSaved) {
+                const statuses = JSON.parse(statusSaved);
+                delete statuses[key];
+                localStorage.setItem('programmeStatuses', JSON.stringify(statuses));
+            }
+
+            // Track deleted programmes
+            const deletedSaved = localStorage.getItem('deletedProgrammes');
+            const deleted = deletedSaved ? JSON.parse(deletedSaved) : [];
+            deleted.push(key);
+            localStorage.setItem('deletedProgrammes', JSON.stringify(deleted));
+
+            // Remove from programmes array
+            programmes.splice(currentModalIndex, 1);
+
+            // Close modal and refresh UI
+            closeModal();
+            updateDashboard();
+            applyFilters();
+        }
+
+        // Close modal
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+                currentModalIndex = null;
+            }
+        }
+
+        // Open add modal
+        function openAddModal() {
+            // Reset form
+            document.getElementById('addUniversity').value = '';
+            document.getElementById('addProgramme').value = '';
+            document.getElementById('addCountry').value = 'UK';
+            document.getElementById('addStatus').value = 'Not started';
+            document.getElementById('addDeadline').value = '';
+            document.getElementById('addDuration').value = '';
+            document.getElementById('addFee').value = '';
+            document.getElementById('addStartDate').value = '';
+            document.getElementById('addRanking').value = '';
+            document.getElementById('addPrerequisites').value = '';
+            document.getElementById('addNotes').value = '';
+
+            document.getElementById('addModalOverlay').classList.add('active');
+        }
+
+        // Close add modal
+        function closeAddModal(event) {
+            if (!event || event.target === document.getElementById('addModalOverlay')) {
+                document.getElementById('addModalOverlay').classList.remove('active');
+            }
+        }
+
+        // Add new programme
+        function addNewProgramme() {
+            const university = document.getElementById('addUniversity').value.trim();
+            const programme = document.getElementById('addProgramme').value.trim();
+
+            if (!university || !programme) {
+                alert('Please enter both University and Programme name.');
+                return;
+            }
+
+            // Check for duplicates
+            const exists = programmes.some(p =>
+                p.university.toLowerCase() === university.toLowerCase() &&
+                p.programme.toLowerCase() === programme.toLowerCase()
+            );
+
+            if (exists) {
+                alert('This university/programme combination already exists.');
+                return;
+            }
+
+            // Format dates
+            const formatDateForStorage = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            };
+
+            const deadlineValue = document.getElementById('addDeadline').value;
+            const startDateValue = document.getElementById('addStartDate').value;
+            const durationValue = document.getElementById('addDuration').value;
+
+            // Create new programme object
+            const newProgramme = {
+                university: university,
+                country: document.getElementById('addCountry').value,
+                programme: programme,
+                deadline: formatDateForStorage(deadlineValue),
+                ranking: document.getElementById('addRanking').value,
+                duration: durationValue ? parseInt(durationValue) : null,
+                status: document.getElementById('addStatus').value,
+                prerequisites: document.getElementById('addPrerequisites').value,
+                fee: document.getElementById('addFee').value,
+                startDate: formatDateForStorage(startDateValue),
+                notes: document.getElementById('addNotes').value
+            };
+
+            // Add to programmes array
+            programmes.push(newProgramme);
+
+            // Save to localStorage
+            const key = `${newProgramme.university}|${newProgramme.programme}`;
+            const saved = localStorage.getItem('programmeData');
+            const allData = saved ? JSON.parse(saved) : {};
+            allData[key] = {
+                status: newProgramme.status,
+                deadline: newProgramme.deadline,
+                duration: newProgramme.duration,
+                fee: newProgramme.fee,
+                startDate: newProgramme.startDate,
+                country: newProgramme.country,
+                ranking: newProgramme.ranking,
+                prerequisites: newProgramme.prerequisites,
+                notes: newProgramme.notes
+            };
+            localStorage.setItem('programmeData', JSON.stringify(allData));
+
+            // Save added programmes separately (to persist new entries)
+            const addedProgrammes = JSON.parse(localStorage.getItem('addedProgrammes') || '[]');
+            addedProgrammes.push(newProgramme);
+            localStorage.setItem('addedProgrammes', JSON.stringify(addedProgrammes));
+
+            // Update UI
+            updateDashboard();
+            applyFilters();
+            closeAddModal();
+
+            // Show success message
+            alert('Programme added successfully!');
+        }
+
+        // Export data as CSV
+        function exportCSV() {
+            // CSV header matching original format
+            const headers = ['University', 'Country', 'Masterprogram', 'Deadline', 'Ranking', 'Duration (month)', 'Status', 'Pre-Requisites', 'Fee', 'Start Date', 'Notes'];
+
+            // Helper function to escape CSV fields
+            function escapeCSV(field) {
+                if (field === null || field === undefined) return '';
+                const str = String(field);
+                // If field contains comma, newline, or quote, wrap in quotes and escape existing quotes
+                if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+
+            // Build CSV rows
+            const rows = programmes.map(p => {
+                return [
+                    escapeCSV(p.university),
+                    escapeCSV(p.country),
+                    escapeCSV(p.programme),
+                    escapeCSV(p.deadline),
+                    escapeCSV(p.ranking),
+                    escapeCSV(p.duration),
+                    escapeCSV(p.status),
+                    escapeCSV(p.prerequisites),
+                    escapeCSV(p.fee),
+                    escapeCSV(p.startDate),
+                    escapeCSV(p.notes)
+                ].join(',');
+            });
+
+            // Combine header and rows
+            const csv = [headers.join(','), ...rows].join('\n');
+
+            // Create download
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Master_Applications_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        }
+
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('clock').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Initialize
+        function init() {
+            // Check saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark');
+            }
+
+            updateDashboard();
+            renderTable();
+
+            // Start clock
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    closeDatePopup();
+                    closeAddModal();
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
