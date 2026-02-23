@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-02-23T15:48:32.261Z",
+  "lastModified": "2026-02-23T16:27:24.904Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -272,6 +272,19 @@
       "status": "Done",
       "prerequisites": "Bachelor overall mark 4.5/6.0\n\nThe English language level for this course is: Level 2\n\nhttps://www.ucl.ac.uk/languages-international-education/preparation-courses are for international students who are aiming to study for a postgraduate degree at UCL. The courses will develop your academic English and academic skills required to succeed at postgraduate level.",
       "fee": "To be confirmed",
+      "startDate": "September 1, 2026",
+      "notes": ""
+    },
+    {
+      "university": "ie University",
+      "country": "ES",
+      "programme": "Computer Science & Business Technology",
+      "deadline": "",
+      "ranking": "",
+      "duration": 11,
+      "status": "Not started",
+      "prerequisites": "TOEFL min. 100 Points\n\nCandidates are required to take either the ieGAT (IE Global Admission Test), GMAT or GRE tests.",
+      "fee": "36'000€",
       "startDate": "September 1, 2026",
       "notes": ""
     }
