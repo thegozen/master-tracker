@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-02-23T16:27:24.904Z",
+  "lastModified": "2026-02-23T16:27:42.402Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -279,13 +279,13 @@
       "university": "ie University",
       "country": "ES",
       "programme": "Computer Science & Business Technology",
-      "deadline": "",
+      "deadline": "September 1, 2026",
       "ranking": "",
       "duration": 11,
       "status": "Not started",
       "prerequisites": "TOEFL min. 100 Points\n\nCandidates are required to take either the ieGAT (IE Global Admission Test), GMAT or GRE tests.",
       "fee": "36'000€",
-      "startDate": "September 1, 2026",
+      "startDate": "August 31, 2026",
       "notes": ""
     }
   ]
