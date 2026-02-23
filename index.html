@@ -600,17 +600,63 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .dashboard { grid-template-columns: repeat(2, 1fr); }
-            table { font-size: 0.875rem; }
-            th, td { padding: 10px 8px; }
+            .container { padding: 12px; }
+
+            header { gap: 12px; }
+
+            h1 { font-size: 1.35rem; }
+
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .header-actions .btn {
+                font-size: 0.8rem;
+                padding: 7px 12px;
+            }
+
+            .dashboard { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+            .card { padding: 14px; }
+            .card-value { font-size: 1.5rem; }
+
+            .deadlines-section { padding: 14px; }
+
+            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table { min-width: 650px; font-size: 0.8rem; }
+            th, td { padding: 10px 8px; white-space: nowrap; }
+            td:first-child, th:first-child { white-space: normal; min-width: 140px; }
+
             .calendar-day { min-height: 50px; }
             .day-event { font-size: 0.6rem; }
+
+            .modal { width: 95%; max-height: 90vh; border-radius: 12px; }
+            .modal-header { padding: 16px; }
+            .modal-title { font-size: 1.2rem; }
+            .modal-body { padding: 16px; }
+            .detail-grid { grid-template-columns: 1fr; gap: 12px; }
+
+            .token-banner { flex-direction: column; align-items: flex-start; padding: 12px 16px; font-size: 0.8rem; }
+
+            .toast-container { left: 12px; right: 12px; max-width: none; }
         }
 
         @media (max-width: 480px) {
-            .dashboard { grid-template-columns: 1fr; }
-            .filters { flex-direction: column; }
-            .search-input, select { width: 100%; }
+            .header-actions .btn-primary { flex: 1; justify-content: center; }
+            .header-actions .view-toggle { order: 10; }
+
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+
+            .filters { flex-direction: column; gap: 8px; }
+            .search-input { width: 100%; min-width: 0; }
+            .multi-select { width: 100%; }
+
+            table { min-width: 580px; }
+
+            .modal-actions { flex-wrap: wrap; }
+            .modal-actions .btn { font-size: 0.8rem; padding: 8px 12px; }
         }
 
         /* Empty State */
