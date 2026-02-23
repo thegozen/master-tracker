@@ -1,0 +1,2426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master's Application Tracker</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .dark {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --success: #22c55e;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .clock {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-secondary.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Dashboard Cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .card-value.success { color: var(--success); }
+        .card-value.warning { color: var(--warning); }
+        .card-value.danger { color: var(--danger); }
+
+        /* Deadlines Section */
+        .deadlines-section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .deadlines-section h2 {
+            font-size: 1.125rem;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        .deadline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .deadline-item:last-child {
+            border-bottom: none;
+        }
+
+        .deadline-info {
+            flex: 1;
+        }
+
+        .deadline-uni {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .deadline-program {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .deadline-days {
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .deadline-days.urgent { background: #fef2f2; color: var(--danger); }
+        .deadline-days.soon { background: #fff7ed; color: var(--warning); }
+        .deadline-days.ok { background: #f0fdf4; color: var(--success); }
+
+        .dark .deadline-days.urgent { background: #450a0a; }
+        .dark .deadline-days.soon { background: #431407; }
+        .dark .deadline-days.ok { background: #052e16; }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        select {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            background: var(--border);
+        }
+
+        th .sort-icon {
+            margin-left: 4px;
+            opacity: 0.5;
+        }
+
+        th.sorted .sort-icon {
+            opacity: 1;
+        }
+
+        tr:hover {
+            background: var(--bg);
+            cursor: pointer;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-done { background: #dcfce7; color: #166534; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .status-not-interested { background: #f1f5f9; color: #64748b; }
+        .status-in-progress { background: #dbeafe; color: #1e40af; }
+        .status-accepted { background: #d1fae5; color: #065f46; }
+        .status-enrolled { background: #064e3b; color: #ffffff; }
+        .status-withdrawn { background: #e2e8f0; color: #475569; }
+
+        .dark .status-done { background: #052e16; color: #4ade80; }
+        .dark .status-pending { background: #422006; color: #fbbf24; }
+        .dark .status-rejected { background: #450a0a; color: #fca5a5; }
+        .dark .status-not-interested { background: #334155; color: #94a3b8; }
+        .dark .status-in-progress { background: #1e3a5f; color: #93c5fd; }
+        .dark .status-accepted { background: #064e3b; color: #6ee7b7; }
+        .dark .status-enrolled { background: #10b981; color: #ffffff; }
+        .dark .status-withdrawn { background: #334155; color: #94a3b8; }
+
+        .country-flag {
+            font-size: 1.25rem;
+            margin-right: 4px;
+        }
+
+        /* Calendar View */
+        .calendar-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            padding: 20px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .calendar-container.active {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: auto repeat(6, 1fr);
+            gap: 4px;
+            width: 100%;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            padding: 8px;
+        }
+
+        .calendar-day {
+            min-height: 70px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 4px;
+            font-size: 0.875rem;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover { border-color: var(--primary); }
+        .calendar-day.other-month { opacity: 0.4; }
+        .calendar-day.today { border-color: var(--primary); border-width: 2px; }
+
+        .day-number { font-weight: 600; margin-bottom: 4px; }
+        .day-events { display: flex; flex-direction: column; gap: 2px; }
+
+        .day-event {
+            font-size: 0.7rem;
+            padding: 2px 4px;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .day-event.done { background: #dcfce7; color: #166534; }
+        .day-event.pending { background: #fef3c7; color: #92400e; }
+        .day-event.rejected { background: #fee2e2; color: #991b1b; }
+        .day-event.not-interested { background: #f1f5f9; color: #64748b; }
+        .day-event.in-progress { background: #dbeafe; color: #1e40af; }
+        .day-event.accepted { background: #d1fae5; color: #065f46; }
+        .day-event.enrolled { background: #064e3b; color: #ffffff; }
+        .day-event.withdrawn { background: #e2e8f0; color: #475569; }
+
+        .dark .day-event.done { background: #052e16; color: #4ade80; }
+        .dark .day-event.pending { background: #422006; color: #fbbf24; }
+        .dark .day-event.rejected { background: #450a0a; color: #fca5a5; }
+        .dark .day-event.not-interested { background: #334155; color: #94a3b8; }
+        .dark .day-event.in-progress { background: #1e3a5f; color: #93c5fd; }
+        .dark .day-event.accepted { background: #064e3b; color: #6ee7b7; }
+        .dark .day-event.enrolled { background: #10b981; color: #ffffff; }
+        .dark .day-event.withdrawn { background: #334155; color: #94a3b8; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-subtitle {
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .detail-item {
+            background: var(--bg);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .detail-section p {
+            white-space: pre-wrap;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .detail-section a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .detail-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Status Select */
+        .status-select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .status-select:focus { outline: none; border-color: var(--primary); }
+        .status-select.status-done { border-color: var(--success); background: #dcfce7; color: #166534; }
+        .status-select.status-pending { border-color: var(--warning); background: #fef3c7; color: #92400e; }
+        .status-select.status-rejected { border-color: var(--danger); background: #fee2e2; color: #991b1b; }
+        .status-select.status-not-interested { border-color: #94a3b8; background: #f1f5f9; color: #64748b; }
+        .status-select.status-in-progress { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
+        .status-select.status-accepted { border-color: #10b981; background: #d1fae5; color: #065f46; }
+        .status-select.status-enrolled { border-color: #064e3b; background: #064e3b; color: #ffffff; }
+        .status-select.status-withdrawn { border-color: #64748b; background: #e2e8f0; color: #475569; }
+
+        .dark .status-select.status-done { background: #052e16; color: #4ade80; }
+        .dark .status-select.status-pending { background: #422006; color: #fbbf24; }
+        .dark .status-select.status-rejected { background: #450a0a; color: #fca5a5; }
+        .dark .status-select.status-not-interested { background: #334155; color: #94a3b8; }
+        .dark .status-select.status-in-progress { background: #1e3a5f; color: #93c5fd; }
+        .dark .status-select.status-accepted { background: #064e3b; color: #6ee7b7; }
+        .dark .status-select.status-enrolled { background: #10b981; color: #ffffff; }
+        .dark .status-select.status-withdrawn { background: #334155; color: #94a3b8; }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            table { font-size: 0.875rem; }
+            th, td { padding: 10px 8px; }
+            .calendar-day { min-height: 50px; }
+            .day-event { font-size: 0.6rem; }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; }
+            .search-input, select { width: 100%; }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        /* Date Popup */
+        .date-popup-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+
+        .date-popup-overlay.active { opacity: 1; visibility: visible; }
+
+        .date-popup {
+            background: var(--bg-card);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.2s;
+        }
+
+        .date-popup-overlay.active .date-popup { transform: translateY(0); }
+
+        .date-popup-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+        }
+
+        .date-popup-header h3 { font-size: 1.125rem; font-weight: 600; }
+        .date-popup-body { padding: 12px; }
+
+        .date-programme-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .date-programme-item:hover { background: var(--bg); }
+        .date-programme-info { flex: 1; }
+        .date-programme-uni { font-weight: 600; font-size: 0.9rem; }
+        .date-programme-name { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Multi-select Dropdown */
+        .multi-select { position: relative; min-width: 160px; }
+
+        .multi-select-btn {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .multi-select-btn:hover { border-color: var(--text-muted); }
+        .multi-select-btn .arrow { font-size: 0.7rem; transition: transform 0.2s; }
+        .multi-select.open .multi-select-btn .arrow { transform: rotate(180deg); }
+
+        .multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            display: none;
+        }
+
+        .multi-select.open .multi-select-dropdown { display: block; }
+
+        .multi-select-option {
+            padding: 10px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .multi-select-option:hover { background: var(--bg); }
+        .multi-select-option:first-child { border-radius: 8px 8px 0 0; }
+        .multi-select-option:last-child { border-radius: 0 0 8px 8px; }
+
+        .multi-select-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .multi-select-option.selected .multi-select-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .multi-select-option.selected .multi-select-checkbox::after {
+            content: "\2713";
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* Editable Fields */
+        .edit-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .edit-input:focus { outline: none; border-color: var(--primary); }
+
+        .edit-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        .edit-textarea:focus { outline: none; border-color: var(--primary); }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-save { background: var(--success); color: white; flex: 1; }
+        .btn-save:hover { background: #15803d; }
+        .btn-delete { background: var(--danger); color: white; }
+        .btn-delete:hover { background: #b91c1c; }
+
+        .detail-section-edit { margin-bottom: 20px; }
+        .detail-section-edit h3 { font-size: 0.875rem; margin-bottom: 8px; color: var(--text); }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 380px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: toastIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.success { background: #16a34a; }
+        .toast.error { background: #dc2626; }
+        .toast.warning { background: #ea580c; }
+        .toast.info { background: #2563eb; }
+
+        .toast.removing {
+            animation: toastOut 0.3s ease forwards;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.3s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Saving Indicator */
+        .saving-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .saving-indicator.active {
+            opacity: 1;
+        }
+
+        .saving-indicator .mini-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Settings Gear Button */
+        .btn-settings {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .btn-settings:hover { background: var(--border); }
+
+        /* Settings Modal Specific */
+        .settings-field {
+            margin-bottom: 20px;
+        }
+
+        .settings-field label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .settings-field .hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .connection-status {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .connection-status.show { display: block; }
+        .connection-status.ok { background: #dcfce7; color: #166534; }
+        .connection-status.fail { background: #fee2e2; color: #991b1b; }
+
+        .dark .connection-status.ok { background: #052e16; color: #4ade80; }
+        .dark .connection-status.fail { background: #450a0a; color: #fca5a5; }
+
+        /* Token Banner */
+        .token-banner {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dark .token-banner {
+            background: #1e3a5f;
+            border-color: #2563eb;
+        }
+
+        .token-banner-text {
+            font-size: 0.875rem;
+            color: var(--text);
+        }
+
+        .token-banner-text strong { font-weight: 600; }
+
+        .token-banner .btn-dismiss {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px;
+        }
+
+        /* Offline banner */
+        .offline-banner {
+            background: #fef3c7;
+            border: 1px solid #fbbf24;
+            border-radius: 10px;
+            padding: 10px 20px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #92400e;
+            display: none;
+        }
+
+        .dark .offline-banner {
+            background: #422006;
+            border-color: #f59e0b;
+            color: #fbbf24;
+        }
+
+        .offline-banner.show { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading data...</div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Saving Indicator -->
+    <div class="saving-indicator" id="savingIndicator">
+        <div class="mini-spinner"></div>
+        <span>Saving...</span>
+    </div>
+
+    <div class="container">
+        <!-- Offline Banner -->
+        <div class="offline-banner" id="offlineBanner">You are offline. Changes will be saved locally and synced when you reconnect.</div>
+
+        <!-- Token Setup Banner -->
+        <div class="token-banner" id="tokenBanner" style="display:none;">
+            <div class="token-banner-text">
+                <strong>GitHub token not set.</strong> To save changes to the repository, set up a GitHub token in Settings.
+            </div>
+            <button class="btn-dismiss" onclick="dismissTokenBanner()">&times;</button>
+        </div>
+
+        <header>
+            <div class="header-title">
+                <h1>Master's Application Tracker</h1>
+                <div class="clock" id="clock"></div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="openAddModal()">+ Add University</button>
+                <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+                <div class="view-toggle">
+                    <button class="btn btn-secondary active" id="tableViewBtn" onclick="setView('table')">Table</button>
+                    <button class="btn btn-secondary" id="calendarViewBtn" onclick="setView('calendar')">Calendar</button>
+                </div>
+                <button class="btn btn-secondary" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+                <button class="btn btn-settings" onclick="openSettingsModal()" title="Settings">&#9881;</button>
+            </div>
+        </header>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboardGrid">
+            <div class="card">
+                <div class="card-label">Total Programmes</div>
+                <div class="card-value" id="totalCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Not Started</div>
+                <div class="card-value" style="color: var(--text-muted);" id="notStartedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">In Progress</div>
+                <div class="card-value" style="color: #3b82f6;" id="inProgressCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Applied</div>
+                <div class="card-value warning" id="appliedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Accepted</div>
+                <div class="card-value success" id="acceptedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Rejected</div>
+                <div class="card-value danger" id="rejectedCount">0</div>
+            </div>
+        </div>
+
+        <!-- Upcoming Deadlines -->
+        <div class="deadlines-section">
+            <h2>Upcoming Deadlines</h2>
+            <div id="upcomingDeadlines"></div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search university or programme..." oninput="applyFilters()">
+            <div class="multi-select" id="countryMultiSelect">
+                <button type="button" class="multi-select-btn" onclick="toggleCountryDropdown()">
+                    <span id="countryFilterLabel">All Countries</span>
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="multi-select-dropdown" style="max-height: 300px; overflow-y: auto;">
+                    <div class="multi-select-option selected" data-value="UK" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127468;&#127463; United Kingdom</span></div>
+                    <div class="multi-select-option selected" data-value="SG" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127480;&#127468; Singapore</span></div>
+                    <div class="multi-select-option selected" data-value="CH" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127464;&#127469; Switzerland</span></div>
+                    <div class="multi-select-option selected" data-value="DE" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127465;&#127466; Germany</span></div>
+                    <div class="multi-select-option selected" data-value="FR" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127467;&#127479; France</span></div>
+                    <div class="multi-select-option selected" data-value="NL" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127475;&#127473; Netherlands</span></div>
+                    <div class="multi-select-option selected" data-value="ES" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127466;&#127480; Spain</span></div>
+                    <div class="multi-select-option selected" data-value="IT" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127470;&#127481; Italy</span></div>
+                    <div class="multi-select-option selected" data-value="IE" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127470;&#127466; Ireland</span></div>
+                    <div class="multi-select-option selected" data-value="US" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127482;&#127480; United States</span></div>
+                    <div class="multi-select-option selected" data-value="CA" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127464;&#127462; Canada</span></div>
+                    <div class="multi-select-option selected" data-value="AU" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127462;&#127482; Australia</span></div>
+                    <div class="multi-select-option selected" data-value="SE" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127480;&#127466; Sweden</span></div>
+                    <div class="multi-select-option selected" data-value="DK" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127465;&#127472; Denmark</span></div>
+                    <div class="multi-select-option selected" data-value="BE" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127463;&#127466; Belgium</span></div>
+                    <div class="multi-select-option selected" data-value="AT" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127462;&#127481; Austria</span></div>
+                    <div class="multi-select-option selected" data-value="PT" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127477;&#127481; Portugal</span></div>
+                    <div class="multi-select-option selected" data-value="NO" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127475;&#127476; Norway</span></div>
+                    <div class="multi-select-option selected" data-value="FI" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127467;&#127470; Finland</span></div>
+                    <div class="multi-select-option selected" data-value="HK" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127469;&#127472; Hong Kong</span></div>
+                    <div class="multi-select-option selected" data-value="JP" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127471;&#127477; Japan</span></div>
+                    <div class="multi-select-option selected" data-value="KR" onclick="toggleCountryOption(this)"><div class="multi-select-checkbox"></div><span>&#127472;&#127479; South Korea</span></div>
+                </div>
+            </div>
+            <div class="multi-select" id="statusMultiSelect">
+                <button type="button" class="multi-select-btn" onclick="toggleStatusDropdown()">
+                    <span id="statusFilterLabel">All Status</span>
+                    <span class="arrow">&#9660;</span>
+                </button>
+                <div class="multi-select-dropdown" style="max-height: 300px; overflow-y: auto;">
+                    <div class="multi-select-option selected" data-value="Not started" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Not Started</span></div>
+                    <div class="multi-select-option selected" data-value="In progress" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>In Progress</span></div>
+                    <div class="multi-select-option selected" data-value="Done" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Applied</span></div>
+                    <div class="multi-select-option selected" data-value="Accepted" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Accepted</span></div>
+                    <div class="multi-select-option selected" data-value="Rejected" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Rejected</span></div>
+                    <div class="multi-select-option selected" data-value="Enrolled" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Enrolled</span></div>
+                    <div class="multi-select-option selected" data-value="Withdrawn" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Withdrawn</span></div>
+                    <div class="multi-select-option selected" data-value="Not interested" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Not Interested</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container" id="tableView">
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable('university')">University <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('programme')">Programme <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('country')">Country <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('deadline')">Deadline <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('status')">Status <span class="sort-icon">&#8597;</span></th>
+                        <th onclick="sortTable('fee')">Fee <span class="sort-icon">&#8597;</span></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Calendar View -->
+        <div class="calendar-container" id="calendarView">
+            <div class="calendar-header">
+                <button class="btn btn-secondary" onclick="changeMonth(-1)">&larr; Prev</button>
+                <h2 id="calendarMonth">January 2026</h2>
+                <button class="btn btn-secondary" onclick="changeMonth(1)">Next &rarr;</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modalTitle">Programme Name</div>
+                    <div class="modal-subtitle" id="modalSubtitle">University Name</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Date Popup -->
+    <div class="date-popup-overlay" id="datePopupOverlay" onclick="closeDatePopup(event)">
+        <div class="date-popup" onclick="event.stopPropagation()">
+            <div class="date-popup-header">
+                <h3 id="datePopupTitle">March 31, 2026</h3>
+                <button class="modal-close" onclick="closeDatePopup()">&times;</button>
+            </div>
+            <div class="date-popup-body" id="datePopupBody"></div>
+        </div>
+    </div>
+
+    <!-- Add University Modal -->
+    <div class="modal-overlay" id="addModalOverlay" onclick="closeAddModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Add New University</div>
+                    <div class="modal-subtitle">Enter programme details</div>
+                </div>
+                <button class="modal-close" onclick="closeAddModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">University *</div>
+                        <div class="detail-value"><input type="text" class="edit-input" id="addUniversity" placeholder="e.g. Oxford University"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Programme *</div>
+                        <div class="detail-value"><input type="text" class="edit-input" id="addProgramme" placeholder="e.g. Management"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">
+                            <select class="edit-input" id="addCountry">
+                                <option value="UK">United Kingdom</option>
+                                <option value="SG">Singapore</option>
+                                <option value="CH">Switzerland</option>
+                                <option value="DE">Germany</option>
+                                <option value="FR">France</option>
+                                <option value="NL">Netherlands</option>
+                                <option value="ES">Spain</option>
+                                <option value="IT">Italy</option>
+                                <option value="IE">Ireland</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                                <option value="SE">Sweden</option>
+                                <option value="DK">Denmark</option>
+                                <option value="BE">Belgium</option>
+                                <option value="AT">Austria</option>
+                                <option value="PT">Portugal</option>
+                                <option value="NO">Norway</option>
+                                <option value="FI">Finland</option>
+                                <option value="HK">Hong Kong</option>
+                                <option value="JP">Japan</option>
+                                <option value="KR">South Korea</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <select class="edit-input" id="addStatus">
+                                <option value="Not started">Not Started</option>
+                                <option value="In progress">In Progress</option>
+                                <option value="Done">Applied</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Enrolled">Enrolled</option>
+                                <option value="Withdrawn">Withdrawn</option>
+                                <option value="Not interested">Not Interested</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Deadline</div>
+                        <div class="detail-value"><input type="date" class="edit-input" id="addDeadline"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Duration (months)</div>
+                        <div class="detail-value"><input type="number" class="edit-input" id="addDuration" placeholder="12"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fee</div>
+                        <div class="detail-value"><input type="text" class="edit-input" id="addFee" placeholder="e.g. \u00a330,000"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Start Date</div>
+                        <div class="detail-value"><input type="date" class="edit-input" id="addStartDate"></div>
+                    </div>
+                </div>
+                <div class="detail-section-edit">
+                    <h3>Ranking</h3>
+                    <textarea class="edit-textarea" id="addRanking" rows="2" placeholder="e.g. #50 FT Master in Management"></textarea>
+                </div>
+                <div class="detail-section-edit">
+                    <h3>Prerequisites & Requirements</h3>
+                    <textarea class="edit-textarea" id="addPrerequisites" rows="4" placeholder="Entry requirements, English requirements, etc."></textarea>
+                </div>
+                <div class="detail-section-edit">
+                    <h3>Notes & Application Rounds</h3>
+                    <textarea class="edit-textarea" id="addNotes" rows="4" placeholder="Programme URL, application rounds, other notes..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                    <button class="btn btn-save" onclick="addNewProgramme()">Add Programme</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModalOverlay" onclick="closeSettingsModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 520px;">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title">Settings</div>
+                    <div class="modal-subtitle">GitHub API Configuration</div>
+                </div>
+                <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-field">
+                    <label for="settingsToken">GitHub Personal Access Token</label>
+                    <input type="password" class="edit-input" id="settingsToken" placeholder="ghp_xxxxxxxxxxxx">
+                    <div class="hint">
+                        Fine-grained token with <strong>Contents: Read and write</strong> on <code>thegozen/master-tracker</code>.
+                        <br><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" style="color: var(--primary);">Create a token on GitHub &rarr;</a>
+                    </div>
+                    <div class="settings-actions">
+                        <button class="btn btn-primary btn-sm" onclick="testConnection()">Test Connection</button>
+                        <button class="btn btn-save btn-sm" onclick="saveToken()">Save</button>
+                        <button class="btn btn-delete btn-sm" onclick="removeToken()">Remove</button>
+                    </div>
+                    <div class="connection-status" id="connectionStatus"></div>
+                </div>
+                <div class="settings-field">
+                    <label>Repository</label>
+                    <div style="font-size: 0.9rem; color: var(--text-muted);">
+                        <code>thegozen/master-tracker</code> &middot; branch: <code>main</code> &middot; file: <code>data.json</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // GitHub API Configuration
+        // =============================================
+        const GITHUB_CONFIG = {
+            owner: 'thegozen',
+            repo: 'master-tracker',
+            branch: 'main',
+            dataPath: 'data.json'
+        };
+
+        let currentSHA = null; // SHA of data.json for optimistic concurrency
+
+        // =============================================
+        // Data
+        // =============================================
+        const programmes = [];
+        let filteredProgrammes = [];
+        let currentSort = { column: null, direction: 'asc' };
+        let currentMonth = new Date(2026, 0, 1);
+        let currentView = 'table';
+        let currentModalIndex = null;
+
+        // Country flags
+        const countryFlags = {
+            'UK': '\u{1F1EC}\u{1F1E7}', 'SG': '\u{1F1F8}\u{1F1EC}', 'CH': '\u{1F1E8}\u{1F1ED}',
+            'DE': '\u{1F1E9}\u{1F1EA}', 'FR': '\u{1F1EB}\u{1F1F7}', 'NL': '\u{1F1F3}\u{1F1F1}',
+            'ES': '\u{1F1EA}\u{1F1F8}', 'IT': '\u{1F1EE}\u{1F1F9}', 'IE': '\u{1F1EE}\u{1F1EA}',
+            'US': '\u{1F1FA}\u{1F1F8}', 'CA': '\u{1F1E8}\u{1F1E6}', 'AU': '\u{1F1E6}\u{1F1FA}',
+            'SE': '\u{1F1F8}\u{1F1EA}', 'DK': '\u{1F1E9}\u{1F1F0}', 'BE': '\u{1F1E7}\u{1F1EA}',
+            'AT': '\u{1F1E6}\u{1F1F9}', 'HK': '\u{1F1ED}\u{1F1F0}', 'JP': '\u{1F1EF}\u{1F1F5}',
+            'KR': '\u{1F1F0}\u{1F1F7}', 'PT': '\u{1F1F5}\u{1F1F9}', 'NO': '\u{1F1F3}\u{1F1F4}',
+            'FI': '\u{1F1EB}\u{1F1EE}'
+        };
+
+        const countryNames = {
+            'UK': 'United Kingdom', 'SG': 'Singapore', 'CH': 'Switzerland',
+            'DE': 'Germany', 'FR': 'France', 'NL': 'Netherlands',
+            'ES': 'Spain', 'IT': 'Italy', 'IE': 'Ireland',
+            'US': 'United States', 'CA': 'Canada', 'AU': 'Australia',
+            'SE': 'Sweden', 'DK': 'Denmark', 'BE': 'Belgium',
+            'AT': 'Austria', 'HK': 'Hong Kong', 'JP': 'Japan',
+            'KR': 'South Korea', 'PT': 'Portugal', 'NO': 'Norway',
+            'FI': 'Finland'
+        };
+
+        // =============================================
+        // Toast Notification System
+        // =============================================
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // =============================================
+        // Saving Indicator
+        // =============================================
+        function showSaving() {
+            document.getElementById('savingIndicator').classList.add('active');
+        }
+
+        function hideSaving() {
+            document.getElementById('savingIndicator').classList.remove('active');
+        }
+
+        // =============================================
+        // GitHub API Layer
+        // =============================================
+        function getToken() {
+            return localStorage.getItem('githubToken') || '';
+        }
+
+        async function fetchDataFromGitHub() {
+            const { owner, repo, dataPath, branch } = GITHUB_CONFIG;
+            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${dataPath}?ref=${branch}`;
+
+            const headers = { 'Accept': 'application/vnd.github.v3+json' };
+            const token = getToken();
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            const response = await fetch(url, { headers });
+
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+            }
+
+            const fileData = await response.json();
+            currentSHA = fileData.sha;
+
+            // Decode base64 content
+            const content = atob(fileData.content.replace(/\n/g, ''));
+            // Handle UTF-8 properly
+            const bytes = new Uint8Array(content.length);
+            for (let i = 0; i < content.length; i++) {
+                bytes[i] = content.charCodeAt(i);
+            }
+            const decoded = new TextDecoder('utf-8').decode(bytes);
+            return JSON.parse(decoded);
+        }
+
+        async function saveDataToGitHub(data) {
+            const token = getToken();
+            if (!token) {
+                throw new Error('No GitHub token configured. Open Settings to add one.');
+            }
+
+            const { owner, repo, dataPath, branch } = GITHUB_CONFIG;
+            const url = `https://api.github.com/repos/${owner}/${repo}/contents/${dataPath}`;
+
+            // Encode content as base64 (handle UTF-8)
+            const jsonStr = JSON.stringify(data, null, 2) + '\n';
+            const encoder = new TextEncoder();
+            const utf8Bytes = encoder.encode(jsonStr);
+            let binaryStr = '';
+            for (let i = 0; i < utf8Bytes.length; i++) {
+                binaryStr += String.fromCharCode(utf8Bytes[i]);
+            }
+            const base64Content = btoa(binaryStr);
+
+            const body = {
+                message: 'Update tracker data',
+                content: base64Content,
+                branch: branch
+            };
+
+            if (currentSHA) {
+                body.sha = currentSHA;
+            }
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(`GitHub save failed: ${response.status} - ${errData.message || response.statusText}`);
+            }
+
+            const result = await response.json();
+            currentSHA = result.content.sha;
+            return result;
+        }
+
+        async function persistToGitHub() {
+            const data = {
+                version: 1,
+                lastModified: new Date().toISOString(),
+                programmes: programmes
+            };
+
+            // Always cache locally
+            localStorage.setItem('githubDataCache', JSON.stringify(data));
+
+            const token = getToken();
+            if (!token) {
+                showToast('Changes saved locally (no GitHub token set)', 'warning');
+                return;
+            }
+
+            if (!navigator.onLine) {
+                showToast('Offline - changes saved locally, will sync when online', 'warning');
+                return;
+            }
+
+            showSaving();
+            try {
+                await saveDataToGitHub(data);
+                hideSaving();
+                showToast('Saved to GitHub', 'success', 2500);
+            } catch (err) {
+                hideSaving();
+                console.error('GitHub save error:', err);
+                showToast('Save failed: ' + err.message, 'error', 6000);
+            }
+        }
+
+        // =============================================
+        // Data Loading
+        // =============================================
+        async function loadSavedData() {
+            try {
+                const data = await fetchDataFromGitHub();
+                programmes.length = 0;
+                data.programmes.forEach(p => programmes.push(p));
+                // Update cache
+                localStorage.setItem('githubDataCache', JSON.stringify(data));
+                return 'github';
+            } catch (err) {
+                console.warn('Failed to load from GitHub, trying cache:', err.message);
+                // Try localStorage cache
+                const cached = localStorage.getItem('githubDataCache');
+                if (cached) {
+                    try {
+                        const data = JSON.parse(cached);
+                        programmes.length = 0;
+                        data.programmes.forEach(p => programmes.push(p));
+                        showToast('Loaded from local cache (GitHub unavailable)', 'warning', 5000);
+                        return 'cache';
+                    } catch (e) {
+                        console.error('Cache parse error:', e);
+                    }
+                }
+                throw err;
+            }
+        }
+
+        // =============================================
+        // Token Management / Settings Modal
+        // =============================================
+        function openSettingsModal() {
+            const token = getToken();
+            document.getElementById('settingsToken').value = token;
+            document.getElementById('connectionStatus').className = 'connection-status';
+            document.getElementById('connectionStatus').textContent = '';
+            document.getElementById('settingsModalOverlay').classList.add('active');
+        }
+
+        function closeSettingsModal(event) {
+            if (!event || event.target === document.getElementById('settingsModalOverlay')) {
+                document.getElementById('settingsModalOverlay').classList.remove('active');
+            }
+        }
+
+        function saveToken() {
+            const token = document.getElementById('settingsToken').value.trim();
+            if (token) {
+                localStorage.setItem('githubToken', token);
+                showToast('Token saved', 'success', 2000);
+                document.getElementById('tokenBanner').style.display = 'none';
+            } else {
+                localStorage.removeItem('githubToken');
+                showToast('Token cleared', 'info', 2000);
+            }
+        }
+
+        function removeToken() {
+            localStorage.removeItem('githubToken');
+            document.getElementById('settingsToken').value = '';
+            showToast('Token removed', 'info', 2000);
+            const status = document.getElementById('connectionStatus');
+            status.className = 'connection-status';
+            status.textContent = '';
+        }
+
+        async function testConnection() {
+            const token = document.getElementById('settingsToken').value.trim();
+            const status = document.getElementById('connectionStatus');
+
+            if (!token) {
+                status.className = 'connection-status show fail';
+                status.textContent = 'Please enter a token first.';
+                return;
+            }
+
+            status.className = 'connection-status show info';
+            status.style.background = '#dbeafe';
+            status.style.color = '#1e40af';
+            status.textContent = 'Testing...';
+
+            try {
+                const { owner, repo, dataPath, branch } = GITHUB_CONFIG;
+                const url = `https://api.github.com/repos/${owner}/${repo}/contents/${dataPath}?ref=${branch}`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    status.className = 'connection-status show ok';
+                    status.style.background = '';
+                    status.style.color = '';
+                    status.textContent = 'Connected successfully! Token has access to the repository.';
+                } else if (response.status === 401) {
+                    status.className = 'connection-status show fail';
+                    status.style.background = '';
+                    status.style.color = '';
+                    status.textContent = 'Authentication failed. Token may be invalid or expired.';
+                } else if (response.status === 404) {
+                    status.className = 'connection-status show fail';
+                    status.style.background = '';
+                    status.style.color = '';
+                    status.textContent = 'Repository or file not found. Check that data.json exists and the token has access.';
+                } else {
+                    status.className = 'connection-status show fail';
+                    status.style.background = '';
+                    status.style.color = '';
+                    status.textContent = `Error: ${response.status} ${response.statusText}`;
+                }
+            } catch (err) {
+                status.className = 'connection-status show fail';
+                status.style.background = '';
+                status.style.color = '';
+                status.textContent = 'Network error: ' + err.message;
+            }
+        }
+
+        function dismissTokenBanner() {
+            document.getElementById('tokenBanner').style.display = 'none';
+            localStorage.setItem('tokenBannerDismissed', 'true');
+        }
+
+        // =============================================
+        // Offline/Online Handling
+        // =============================================
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineBanner').classList.add('show');
+            showToast('You are offline', 'warning');
+        });
+
+        window.addEventListener('online', () => {
+            document.getElementById('offlineBanner').classList.remove('show');
+            showToast('Back online', 'success', 2000);
+        });
+
+        // =============================================
+        // Date Utilities
+        // =============================================
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const date = new Date(dateStr);
+            return isNaN(date.getTime()) ? null : date;
+        }
+
+        function daysUntil(dateStr) {
+            const date = parseDate(dateStr);
+            if (!date) return null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const diffTime = date.getTime() - today.getTime();
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function formatDate(dateStr) {
+            const date = parseDate(dateStr);
+            if (!date) return '-';
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // =============================================
+        // Status Helpers
+        // =============================================
+        function getStatusInfo(status) {
+            switch (status) {
+                case 'In progress': return { class: 'status-in-progress', text: 'In Progress' };
+                case 'Done': return { class: 'status-done', text: 'Applied' };
+                case 'Accepted': return { class: 'status-accepted', text: 'Accepted' };
+                case 'Rejected': return { class: 'status-rejected', text: 'Rejected' };
+                case 'Enrolled': return { class: 'status-enrolled', text: 'Enrolled' };
+                case 'Withdrawn': return { class: 'status-withdrawn', text: 'Withdrawn' };
+                case 'Not interested': return { class: 'status-not-interested', text: 'Not Interested' };
+                default: return { class: 'status-pending', text: 'Not Started' };
+            }
+        }
+
+        // =============================================
+        // Dashboard
+        // =============================================
+        function updateDashboard() {
+            const total = programmes.filter(p => p.programme).length;
+            const notStarted = programmes.filter(p => p.status === 'Not started' && p.programme).length;
+            const inProgress = programmes.filter(p => p.status === 'In progress').length;
+            const applied = programmes.filter(p => p.status === 'Done').length;
+            const accepted = programmes.filter(p => p.status === 'Accepted').length;
+            const rejected = programmes.filter(p => p.status === 'Rejected').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('notStartedCount').textContent = notStarted;
+            document.getElementById('inProgressCount').textContent = inProgress;
+            document.getElementById('appliedCount').textContent = applied;
+            document.getElementById('acceptedCount').textContent = accepted;
+            document.getElementById('rejectedCount').textContent = rejected;
+
+            // Country cards
+            const countryCounts = {};
+            programmes.forEach(p => {
+                if (p.country) countryCounts[p.country] = (countryCounts[p.country] || 0) + 1;
+            });
+
+            const sortedCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]);
+            document.querySelectorAll('.country-card').forEach(el => el.remove());
+
+            const dashboard = document.getElementById('dashboardGrid');
+            sortedCountries.forEach(([code, count]) => {
+                const card = document.createElement('div');
+                card.className = 'card country-card';
+                card.innerHTML = `
+                    <div class="card-label">${countryFlags[code] || ''} ${countryNames[code] || code}</div>
+                    <div class="card-value">${count}</div>
+                `;
+                dashboard.appendChild(card);
+            });
+
+            // Upcoming deadlines
+            const upcoming = programmes
+                .filter(p => p.deadline && (p.status === 'Not started' || p.status === 'In progress'))
+                .map(p => ({ ...p, days: daysUntil(p.deadline) }))
+                .filter(p => p.days !== null && p.days > 0)
+                .sort((a, b) => a.days - b.days)
+                .slice(0, 5);
+
+            const deadlinesContainer = document.getElementById('upcomingDeadlines');
+            if (upcoming.length === 0) {
+                deadlinesContainer.innerHTML = '<p style="color: var(--text-muted);">No upcoming deadlines</p>';
+            } else {
+                deadlinesContainer.innerHTML = upcoming.map(p => {
+                    let urgencyClass = 'ok';
+                    if (p.days <= 14) urgencyClass = 'urgent';
+                    else if (p.days <= 60) urgencyClass = 'soon';
+
+                    return `
+                        <div class="deadline-item" onclick="openModal(${programmes.indexOf(programmes.find(prog => prog.university === p.university && prog.programme === p.programme))})">
+                            <div class="deadline-info">
+                                <div class="deadline-uni">${countryFlags[p.country] || ''} ${p.university}</div>
+                                <div class="deadline-program">${p.programme}</div>
+                            </div>
+                            <div class="deadline-days ${urgencyClass}">${p.days} days</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // =============================================
+        // Table Rendering
+        // =============================================
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+
+            if (filteredProgrammes.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="6">
+                        <div class="empty-state"><h3>No programmes found</h3><p>Try adjusting your filters</p></div>
+                    </td></tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredProgrammes.map((p) => {
+                const originalIndex = programmes.indexOf(p);
+                const statusInfo = getStatusInfo(p.status);
+                return `
+                    <tr onclick="openModal(${originalIndex})">
+                        <td>${countryFlags[p.country] || ''} ${p.university}</td>
+                        <td>${p.programme || '-'}</td>
+                        <td>${countryNames[p.country] || p.country}</td>
+                        <td>${formatDate(p.deadline)}</td>
+                        <td><span class="status-badge ${statusInfo.class}">${statusInfo.text}</span></td>
+                        <td>${p.fee || '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // =============================================
+        // Sorting
+        // =============================================
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            applySorting();
+            renderTable();
+        }
+
+        function applySorting() {
+            if (!currentSort.column) return;
+            const column = currentSort.column;
+            filteredProgrammes.sort((a, b) => {
+                let valA, valB;
+                switch (column) {
+                    case 'university': valA = a.university.toLowerCase(); valB = b.university.toLowerCase(); break;
+                    case 'programme': valA = (a.programme || '').toLowerCase(); valB = (b.programme || '').toLowerCase(); break;
+                    case 'country': valA = a.country; valB = b.country; break;
+                    case 'deadline': valA = parseDate(a.deadline) || new Date(9999, 0, 1); valB = parseDate(b.deadline) || new Date(9999, 0, 1); break;
+                    case 'status': valA = a.status; valB = b.status; break;
+                    case 'fee': valA = a.fee ? parseFloat(a.fee.replace(/[^0-9.]/g, '')) : 0; valB = b.fee ? parseFloat(b.fee.replace(/[^0-9.]/g, '')) : 0; break;
+                }
+                if (valA < valB) return currentSort.direction === 'asc' ? -1 : 1;
+                if (valA > valB) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // =============================================
+        // Filters
+        // =============================================
+        function toggleStatusDropdown() {
+            document.getElementById('statusMultiSelect').classList.toggle('open');
+            document.getElementById('countryMultiSelect').classList.remove('open');
+        }
+
+        function toggleStatusOption(option) {
+            option.classList.toggle('selected');
+            updateStatusLabel();
+            applyFilters();
+        }
+
+        function getSelectedStatuses() {
+            return Array.from(document.querySelectorAll('#statusMultiSelect .multi-select-option.selected'))
+                .map(opt => opt.dataset.value);
+        }
+
+        function updateStatusLabel() {
+            const selected = getSelectedStatuses();
+            const label = document.getElementById('statusFilterLabel');
+            const totalStatuses = 8;
+            if (selected.length === 0 || selected.length === totalStatuses) {
+                label.textContent = 'All Status';
+            } else if (selected.length === 1) {
+                const names = {
+                    'Not started': 'Not Started', 'In progress': 'In Progress', 'Done': 'Applied',
+                    'Accepted': 'Accepted', 'Rejected': 'Rejected', 'Enrolled': 'Enrolled',
+                    'Withdrawn': 'Withdrawn', 'Not interested': 'Not Interested'
+                };
+                label.textContent = names[selected[0]];
+            } else {
+                label.textContent = `${selected.length} statuses`;
+            }
+        }
+
+        function toggleCountryDropdown() {
+            document.getElementById('countryMultiSelect').classList.toggle('open');
+            document.getElementById('statusMultiSelect').classList.remove('open');
+        }
+
+        function toggleCountryOption(option) {
+            option.classList.toggle('selected');
+            updateCountryLabel();
+            applyFilters();
+        }
+
+        function getSelectedCountries() {
+            return Array.from(document.querySelectorAll('#countryMultiSelect .multi-select-option.selected'))
+                .map(opt => opt.dataset.value);
+        }
+
+        function updateCountryLabel() {
+            const selected = getSelectedCountries();
+            const label = document.getElementById('countryFilterLabel');
+            const totalCountries = document.querySelectorAll('#countryMultiSelect .multi-select-option').length;
+            if (selected.length === 0 || selected.length === totalCountries) {
+                label.textContent = 'All Countries';
+            } else if (selected.length === 1) {
+                label.textContent = countryNames[selected[0]] || selected[0];
+            } else {
+                label.textContent = `${selected.length} countries`;
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const countrySelect = document.getElementById('countryMultiSelect');
+            const statusSelect = document.getElementById('statusMultiSelect');
+            if (countrySelect && !countrySelect.contains(e.target)) countrySelect.classList.remove('open');
+            if (statusSelect && !statusSelect.contains(e.target)) statusSelect.classList.remove('open');
+        });
+
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCountries = getSelectedCountries();
+            const selectedStatuses = getSelectedStatuses();
+
+            filteredProgrammes = programmes.filter(p => {
+                const matchesSearch = !search ||
+                    p.university.toLowerCase().includes(search) ||
+                    (p.programme && p.programme.toLowerCase().includes(search));
+                const matchesCountry = selectedCountries.length === 0 || selectedCountries.includes(p.country);
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(p.status);
+                return matchesSearch && matchesCountry && matchesStatus;
+            });
+
+            if (currentSort.column) applySorting();
+            renderTable();
+            renderCalendar();
+        }
+
+        // =============================================
+        // View Toggle
+        // =============================================
+        function setView(view) {
+            currentView = view;
+            document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+            document.getElementById('calendarView').className = view === 'calendar' ? 'calendar-container active' : 'calendar-container';
+            document.getElementById('tableViewBtn').className = view === 'table' ? 'btn btn-secondary active' : 'btn btn-secondary';
+            document.getElementById('calendarViewBtn').className = view === 'calendar' ? 'btn btn-secondary active' : 'btn btn-secondary';
+            if (view === 'calendar') renderCalendar();
+        }
+
+        // =============================================
+        // Calendar
+        // =============================================
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+
+            document.getElementById('calendarMonth').textContent =
+                currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            const firstDay = new Date(year, month, 1);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+            const grid = document.getElementById('calendarGrid');
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            let html = days.map(d => `<div class="calendar-day-header">${d}</div>`).join('');
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+
+                const isOtherMonth = date.getMonth() !== month;
+                const isToday = date.getTime() === today.getTime();
+
+                const dayProgrammes = filteredProgrammes.filter(p => {
+                    const deadline = parseDate(p.deadline);
+                    return deadline &&
+                           deadline.getDate() === date.getDate() &&
+                           deadline.getMonth() === date.getMonth() &&
+                           deadline.getFullYear() === date.getFullYear();
+                });
+
+                let classes = 'calendar-day';
+                if (isOtherMonth) classes += ' other-month';
+                if (isToday) classes += ' today';
+
+                const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                const clickHandler = dayProgrammes.length > 0 ? `onclick="openDatePopup('${dateStr}')"` : '';
+
+                html += `
+                    <div class="${classes}" ${clickHandler}>
+                        <div class="day-number">${date.getDate()}</div>
+                        <div class="day-events">
+                            ${dayProgrammes.slice(0, 2).map(p => {
+                                let eventClass = 'pending';
+                                if (p.status === 'In progress') eventClass = 'in-progress';
+                                else if (p.status === 'Done') eventClass = 'done';
+                                else if (p.status === 'Accepted') eventClass = 'accepted';
+                                else if (p.status === 'Rejected') eventClass = 'rejected';
+                                else if (p.status === 'Enrolled') eventClass = 'enrolled';
+                                else if (p.status === 'Withdrawn') eventClass = 'withdrawn';
+                                else if (p.status === 'Not interested') eventClass = 'not-interested';
+                                return `<div class="day-event ${eventClass}">${p.university}</div>`;
+                            }).join('')}
+                            ${dayProgrammes.length > 2 ? `<div class="day-event" style="background: var(--border);">+${dayProgrammes.length - 2} more</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function changeMonth(delta) {
+            currentMonth.setMonth(currentMonth.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // =============================================
+        // Date Popup
+        // =============================================
+        function openDatePopup(dateStr) {
+            const parts = dateStr.split('-');
+            const year = parseInt(parts[0]);
+            const month = parseInt(parts[1]) - 1;
+            const day = parseInt(parts[2]);
+            const date = new Date(year, month, day);
+
+            document.getElementById('datePopupTitle').textContent =
+                date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            const dayProgrammes = programmes.filter(p => {
+                const deadline = parseDate(p.deadline);
+                return deadline &&
+                       deadline.getDate() === day &&
+                       deadline.getMonth() === month &&
+                       deadline.getFullYear() === year;
+            });
+
+            document.getElementById('datePopupBody').innerHTML = dayProgrammes.map(p => {
+                const originalIndex = programmes.indexOf(p);
+                const statusInfo = getStatusInfo(p.status);
+                return `
+                    <div class="date-programme-item" onclick="closeDatePopup(); openModal(${originalIndex});">
+                        <div class="date-programme-info">
+                            <div class="date-programme-uni">${countryFlags[p.country] || ''} ${p.university}</div>
+                            <div class="date-programme-name">${p.programme || 'No programme name'}</div>
+                        </div>
+                        <span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('datePopupOverlay').classList.add('active');
+        }
+
+        function closeDatePopup(event) {
+            if (!event || event.target === document.getElementById('datePopupOverlay')) {
+                document.getElementById('datePopupOverlay').classList.remove('active');
+            }
+        }
+
+        // =============================================
+        // Edit Modal
+        // =============================================
+        function openModal(index) {
+            currentModalIndex = index;
+            const p = programmes[index];
+
+            document.getElementById('modalTitle').textContent = p.programme || 'No Programme Name';
+            document.getElementById('modalSubtitle').textContent = `${countryFlags[p.country] || ''} ${p.university}`;
+
+            const urlRegex = /(https?:\/\/[^\s\n]+)/g;
+            const urls = (p.notes || '').match(urlRegex) || [];
+            const programmeUrl = urls[0] || '';
+
+            const statusInfo = getStatusInfo(p.status);
+
+            const deadlineDate = parseDate(p.deadline);
+            const deadlineValue = deadlineDate ? deadlineDate.toISOString().split('T')[0] : '';
+            const startDateParsed = parseDate(p.startDate);
+            const startDateValue = startDateParsed ? startDateParsed.toISOString().split('T')[0] : '';
+
+            document.getElementById('modalBody').innerHTML = `
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">
+                            <select class="status-select ${statusInfo.class}" id="editStatus" onchange="updateStatusStyle(this)">
+                                <option value="Not started" ${p.status === 'Not started' ? 'selected' : ''}>Not Started</option>
+                                <option value="In progress" ${p.status === 'In progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="Done" ${p.status === 'Done' ? 'selected' : ''}>Applied</option>
+                                <option value="Accepted" ${p.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                <option value="Rejected" ${p.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                <option value="Enrolled" ${p.status === 'Enrolled' ? 'selected' : ''}>Enrolled</option>
+                                <option value="Withdrawn" ${p.status === 'Withdrawn' ? 'selected' : ''}>Withdrawn</option>
+                                <option value="Not interested" ${p.status === 'Not interested' ? 'selected' : ''}>Not Interested</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Deadline</div>
+                        <div class="detail-value"><input type="date" class="edit-input" id="editDeadline" value="${deadlineValue}"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Duration (months)</div>
+                        <div class="detail-value"><input type="number" class="edit-input" id="editDuration" value="${p.duration || ''}" placeholder="12"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fee</div>
+                        <div class="detail-value"><input type="text" class="edit-input" id="editFee" value="${p.fee || ''}" placeholder="\u00a330,000"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Start Date</div>
+                        <div class="detail-value"><input type="date" class="edit-input" id="editStartDate" value="${startDateValue}"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">
+                            <select class="edit-input" id="editCountry">
+                                ${Object.entries(countryNames).map(([code, name]) =>
+                                    `<option value="${code}" ${p.country === code ? 'selected' : ''}>${countryFlags[code] || ''} ${name}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section-edit">
+                    <h3>Ranking</h3>
+                    <textarea class="edit-textarea" id="editRanking" rows="2" placeholder="e.g. #50 FT Master in Management">${p.ranking || ''}</textarea>
+                </div>
+                <div class="detail-section-edit">
+                    <h3>Prerequisites & Requirements</h3>
+                    <textarea class="edit-textarea" id="editPrerequisites" rows="4" placeholder="Entry requirements, English requirements, etc.">${p.prerequisites || ''}</textarea>
+                </div>
+                <div class="detail-section-edit">
+                    <h3>Notes & Application Rounds</h3>
+                    <textarea class="edit-textarea" id="editNotes" rows="4" placeholder="Programme URL, application rounds, other notes...">${p.notes || ''}</textarea>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-delete" onclick="deleteProgramme()">Delete</button>
+                    <div style="flex: 1;"></div>
+                    ${programmeUrl ? `<a href="${programmeUrl}" target="_blank" class="btn btn-secondary">Visit Website &rarr;</a>` : ''}
+                    <button class="btn btn-save" onclick="saveChanges()">Save Changes</button>
+                </div>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function updateStatusStyle(select) {
+            const statusInfo = getStatusInfo(select.value);
+            select.className = 'status-select ' + statusInfo.class;
+        }
+
+        // =============================================
+        // Save Changes (async with GitHub)
+        // =============================================
+        async function saveChanges() {
+            if (currentModalIndex === null) return;
+
+            const p = programmes[currentModalIndex];
+
+            const formatDateForStorage = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            };
+
+            p.status = document.getElementById('editStatus').value;
+            p.deadline = formatDateForStorage(document.getElementById('editDeadline').value);
+            p.duration = document.getElementById('editDuration').value ? parseInt(document.getElementById('editDuration').value) : null;
+            p.fee = document.getElementById('editFee').value;
+            p.startDate = formatDateForStorage(document.getElementById('editStartDate').value);
+            p.country = document.getElementById('editCountry').value;
+            p.ranking = document.getElementById('editRanking').value;
+            p.prerequisites = document.getElementById('editPrerequisites').value;
+            p.notes = document.getElementById('editNotes').value;
+
+            document.getElementById('modalSubtitle').textContent = `${countryFlags[p.country] || ''} ${p.university}`;
+
+            updateDashboard();
+            applyFilters();
+
+            const saveBtn = document.querySelector('.btn-save');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+
+            await persistToGitHub();
+
+            saveBtn.textContent = 'Saved!';
+            saveBtn.style.background = '#15803d';
+            saveBtn.disabled = false;
+            setTimeout(() => {
+                saveBtn.textContent = originalText;
+                saveBtn.style.background = '';
+            }, 1500);
+        }
+
+        // =============================================
+        // Delete Programme (async with GitHub)
+        // =============================================
+        async function deleteProgramme() {
+            if (currentModalIndex === null) return;
+
+            const p = programmes[currentModalIndex];
+            const confirmDelete = confirm(`Are you sure you want to delete "${p.programme}" at ${p.university}?`);
+            if (!confirmDelete) return;
+
+            programmes.splice(currentModalIndex, 1);
+            closeModal();
+            updateDashboard();
+            applyFilters();
+
+            await persistToGitHub();
+        }
+
+        // =============================================
+        // Close Modal
+        // =============================================
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+                currentModalIndex = null;
+            }
+        }
+
+        // =============================================
+        // Add New Programme (async with GitHub)
+        // =============================================
+        function openAddModal() {
+            document.getElementById('addUniversity').value = '';
+            document.getElementById('addProgramme').value = '';
+            document.getElementById('addCountry').value = 'UK';
+            document.getElementById('addStatus').value = 'Not started';
+            document.getElementById('addDeadline').value = '';
+            document.getElementById('addDuration').value = '';
+            document.getElementById('addFee').value = '';
+            document.getElementById('addStartDate').value = '';
+            document.getElementById('addRanking').value = '';
+            document.getElementById('addPrerequisites').value = '';
+            document.getElementById('addNotes').value = '';
+            document.getElementById('addModalOverlay').classList.add('active');
+        }
+
+        function closeAddModal(event) {
+            if (!event || event.target === document.getElementById('addModalOverlay')) {
+                document.getElementById('addModalOverlay').classList.remove('active');
+            }
+        }
+
+        async function addNewProgramme() {
+            const university = document.getElementById('addUniversity').value.trim();
+            const programme = document.getElementById('addProgramme').value.trim();
+
+            if (!university || !programme) {
+                alert('Please enter both University and Programme name.');
+                return;
+            }
+
+            const exists = programmes.some(p =>
+                p.university.toLowerCase() === university.toLowerCase() &&
+                p.programme.toLowerCase() === programme.toLowerCase()
+            );
+
+            if (exists) {
+                alert('This university/programme combination already exists.');
+                return;
+            }
+
+            const formatDateForStorage = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr + 'T00:00:00');
+                return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            };
+
+            const newProgramme = {
+                university: university,
+                country: document.getElementById('addCountry').value,
+                programme: programme,
+                deadline: formatDateForStorage(document.getElementById('addDeadline').value),
+                ranking: document.getElementById('addRanking').value,
+                duration: document.getElementById('addDuration').value ? parseInt(document.getElementById('addDuration').value) : null,
+                status: document.getElementById('addStatus').value,
+                prerequisites: document.getElementById('addPrerequisites').value,
+                fee: document.getElementById('addFee').value,
+                startDate: formatDateForStorage(document.getElementById('addStartDate').value),
+                notes: document.getElementById('addNotes').value
+            };
+
+            programmes.push(newProgramme);
+            updateDashboard();
+            applyFilters();
+            closeAddModal();
+
+            await persistToGitHub();
+            showToast('Programme added!', 'success', 2500);
+        }
+
+        // =============================================
+        // Export CSV
+        // =============================================
+        function exportCSV() {
+            const headers = ['University', 'Country', 'Masterprogram', 'Deadline', 'Ranking', 'Duration (month)', 'Status', 'Pre-Requisites', 'Fee', 'Start Date', 'Notes'];
+
+            function escapeCSV(field) {
+                if (field === null || field === undefined) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+
+            const rows = programmes.map(p => [
+                escapeCSV(p.university), escapeCSV(p.country), escapeCSV(p.programme),
+                escapeCSV(p.deadline), escapeCSV(p.ranking), escapeCSV(p.duration),
+                escapeCSV(p.status), escapeCSV(p.prerequisites), escapeCSV(p.fee),
+                escapeCSV(p.startDate), escapeCSV(p.notes)
+            ].join(','));
+
+            const csv = [headers.join(','), ...rows].join('\n');
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Master_Applications_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // =============================================
+        // Dark Mode
+        // =============================================
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        }
+
+        // =============================================
+        // Clock
+        // =============================================
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long', year: 'numeric', month: 'long',
+                day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        // =============================================
+        // Init (async)
+        // =============================================
+        async function init() {
+            // Dark mode
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark');
+            }
+
+            // Show token banner if no token and not dismissed
+            if (!getToken() && localStorage.getItem('tokenBannerDismissed') !== 'true') {
+                document.getElementById('tokenBanner').style.display = 'flex';
+            }
+
+            // Offline check
+            if (!navigator.onLine) {
+                document.getElementById('offlineBanner').classList.add('show');
+            }
+
+            // Load data
+            try {
+                const source = await loadSavedData();
+                if (source === 'github') {
+                    // silently loaded
+                }
+            } catch (err) {
+                console.error('Failed to load data:', err);
+                showToast('Could not load data. Check your connection or settings.', 'error', 8000);
+            }
+
+            // Hide loading overlay
+            document.getElementById('loadingOverlay').classList.add('hidden');
+
+            filteredProgrammes = [...programmes];
+            updateDashboard();
+            renderTable();
+
+            // Clock
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    closeDatePopup();
+                    closeAddModal();
+                    closeSettingsModal();
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
