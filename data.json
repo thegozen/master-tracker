@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-02-23T15:28:53.600Z",
+  "lastModified": "2026-02-23T15:32:39.205Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -222,19 +222,6 @@
       "fee": "£28,000",
       "startDate": "",
       "notes": "https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/management-and-artificial-intelligence-msc/2026/"
-    },
-    {
-      "university": "Sungkyunkwan University (SKKU)",
-      "country": "SG",
-      "programme": "",
-      "deadline": "",
-      "ranking": "",
-      "duration": null,
-      "status": "Not started",
-      "prerequisites": "",
-      "fee": "",
-      "startDate": "",
-      "notes": ""
     },
     {
       "university": "National University Singapore (NUS)",
