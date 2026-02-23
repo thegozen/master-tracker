@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-02-23T16:27:42.402Z",
+  "lastModified": "2026-02-23T16:28:57.559Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -266,13 +266,13 @@
       "university": "University College London (UCL)",
       "country": "UK",
       "programme": "Management of Complex Projects",
-      "deadline": "June 26, 2026",
+      "deadline": "June 25, 2026",
       "ranking": "#22 World University Ranking",
       "duration": 12,
-      "status": "Done",
+      "status": "Not started",
       "prerequisites": "Bachelor overall mark 4.5/6.0\n\nThe English language level for this course is: Level 2\n\nhttps://www.ucl.ac.uk/languages-international-education/preparation-courses are for international students who are aiming to study for a postgraduate degree at UCL. The courses will develop your academic English and academic skills required to succeed at postgraduate level.",
       "fee": "To be confirmed",
-      "startDate": "September 1, 2026",
+      "startDate": "August 31, 2026",
       "notes": ""
     },
     {
