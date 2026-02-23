@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-02-23T00:00:00.000Z",
+  "lastModified": "2026-02-23T15:28:19.847Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -11,7 +11,7 @@
       "duration": 12,
       "status": "Not started",
       "prerequisites": "Bachelor degree with a minimum average of 5/6. \n\nEnglish Requirements:\nWe also require you to meet our https://www.alliancembs.manchester.ac.uk/study/masters/masters-entry-requirements/.\n\nIELTS: 7.0 overall and no other element below 6.5\nTOEFL: 100 overall with a minimum score of 22 in other elements.\nCambridge Proficiency Minimum grade B.\nCambridge Advanced Minimum grade B.",
-      "fee": "\u00a333,100",
+      "fee": "£33,100",
       "startDate": "",
       "notes": "https://www.alliancembs.manchester.ac.uk/study/masters/msc-management/\n\nRound 1: 7 December 2025\nRound 2: 1 March 2026\nRound 3: 3 May 2026\nRound 4: 5 July 2026"
     },
@@ -24,7 +24,7 @@
       "duration": 12,
       "status": "Not started",
       "prerequisites": "2.1 degree\n\nhttps://www.business-school.ed.ac.uk/msc/entrepreneurship-innovation/entry-requirements\n\nEnglish Requirements:\nTOEFL: Total 100 with at least 20 in each component",
-      "fee": "\u00a327,100",
+      "fee": "£27,100",
       "startDate": "",
       "notes": "https://www.business-school.ed.ac.uk/msc/entrepreneurship-innovation\n\nRound 2: 10 December 2025\nRound 3: 11 February 2026\nRound 4: 22 April 2026\nRound 5: 10 June 2026"
     },
@@ -37,7 +37,7 @@
       "duration": 12,
       "status": "Not started",
       "prerequisites": "Bachelor overall mark \n\nEnglish Requirements:\nTOEFL iBT: We accept an overall score of 5.0 (95+) with minimum scores of 5.0 in all elements\n\n24-26 Reading\n22-25 Listening\n25-26 Speaking\n24-26 Writing\n\nFirst or 2:1 in a quantitative subject such as Mathematics, Statistics, Computer science, Engineering, Physics or a quantitative economics degree.",
-      "fee": "\u00a347,000",
+      "fee": "£47,000",
       "startDate": "September 1, 2026",
       "notes": "https://www.imperial.ac.uk/business-school/masters/business-analytics/\n\nRound 1: 26 November 2025\nRound 2: 4 March 2026\nRound 3: 6 May 2026\nRound 4: 17 June 2026"
     },
@@ -71,13 +71,13 @@
       "university": "National University Singapore (NUS)",
       "country": "SG",
       "programme": "Business Analytics",
-      "deadline": "January 31, 2026",
+      "deadline": "January 30, 2026",
       "ranking": "#17 THE World University",
       "duration": 12,
-      "status": "Done",
-      "prerequisites": "A good Bachelors' degree, preferably from Business, Computing, Economics, Engineering, Mathematics, Science or Statistics, with a good honours classification; or at least 2 years' relevant work experience\n\n(Highly Recommended) A good quantitative score in GRE/GMAT* \u2192 But not required\n\nStrong Mathematics foundation",
+      "status": "Not interested",
+      "prerequisites": "A good Bachelors' degree, preferably from Business, Computing, Economics, Engineering, Mathematics, Science or Statistics, with a good honours classification; or at least 2 years' relevant work experience\n\n(Highly Recommended) A good quantitative score in GRE/GMAT* → But not required\n\nStrong Mathematics foundation",
       "fee": "S$85,000",
-      "startDate": "August 1, 2026",
+      "startDate": "July 31, 2026",
       "notes": "https://msba.nus.edu.sg/programme/"
     },
     {
@@ -101,10 +101,10 @@
       "ranking": "#38 THE World University Ranking",
       "duration": 12,
       "status": "Not started",
-      "prerequisites": "2.1 degree at Undergraduate (mindestens 5.0 Schnitt)\n\nIf you have a lower degree classification, or a degree in an unrelated subject, your application may be considered if you can demonstrate significant relevant work experience, or offer a related graduate qualification (such as a Masters or PGDip).\n\nEnglish Requirements:\nTOEFL \u2192 100 overall with a minimum of 25 in writing and 23 in each of the other skills\nhttps://www.kcl.ac.uk/study/postgraduate-taught/how-to-apply/entry-requirements/english-language-requirements#section-3",
-      "fee": "\u00a338,300",
+      "prerequisites": "2.1 degree at Undergraduate (mindestens 5.0 Schnitt)\n\nIf you have a lower degree classification, or a degree in an unrelated subject, your application may be considered if you can demonstrate significant relevant work experience, or offer a related graduate qualification (such as a Masters or PGDip).\n\nEnglish Requirements:\nTOEFL → 100 overall with a minimum of 25 in writing and 23 in each of the other skills\nhttps://www.kcl.ac.uk/study/postgraduate-taught/how-to-apply/entry-requirements/english-language-requirements#section-3",
+      "fee": "£38,300",
       "startDate": "September 1, 2026",
-      "notes": "https://www.kcl.ac.uk/study/postgraduate-taught/courses/management-technological-change\n\nOur first application deadline is on 9 March 2026 (23:59 UK time). The final application deadlines for this programme are:\n\u2022 Overseas (international) fee status: 25 July 2026 (23:59 UK time)\n\nAfter the first application deadline in March:\n\u2022 if the programme is not yet full, we will continue to accept applications until all available places are filled up to the final application deadlines above\n\u2022 if the programme becomes full before the final application deadlines stated above, we will close the programme to further applications"
+      "notes": "https://www.kcl.ac.uk/study/postgraduate-taught/courses/management-technological-change\n\nOur first application deadline is on 9 March 2026 (23:59 UK time). The final application deadlines for this programme are:\n• Overseas (international) fee status: 25 July 2026 (23:59 UK time)\n\nAfter the first application deadline in March:\n• if the programme is not yet full, we will continue to accept applications until all available places are filled up to the final application deadlines above\n• if the programme becomes full before the final application deadlines stated above, we will close the programme to further applications"
     },
     {
       "university": "HSG",
@@ -114,10 +114,10 @@
       "ranking": "#9 FT Business School (EU)",
       "duration": 36,
       "status": "Not started",
-      "prerequisites": "- mindestens teilweise fach\u00e4hnlicher Bachelor-Abschluss einer Schweizer Universit\u00e4t\n\n- betriebswirtschaftlicher (fach\u00e4hnlicher) Bachelor-Abschluss einer Schweizer Fachhochschule mit einem Mindestnotenschnitt von 5.00 im Abschlusszeugnis und maximal 20 ECTS Credits von 180 ECTS Credits an Praktikumsleistungen.",
+      "prerequisites": "- mindestens teilweise fachähnlicher Bachelor-Abschluss einer Schweizer Universität\n\n- betriebswirtschaftlicher (fachähnlicher) Bachelor-Abschluss einer Schweizer Fachhochschule mit einem Mindestnotenschnitt von 5.00 im Abschlusszeugnis und maximal 20 ECTS Credits von 180 ECTS Credits an Praktikumsleistungen.",
       "fee": "",
       "startDate": "October 1, 2026",
-      "notes": "https://www.unisg.ch/de/studium/programme/master/business-innovation-mbi/\n\nTeilweise fach\u00e4hnlicher universit\u00e4rer Bachelor-Abschluss: \n60 ECTS Credits in zwei der drei Kernbereiche Betriebswirtschaftslehre, Volkswirtschaftslehre und Recht, davon mindestens 30 ECTS Credits in Betriebswirtschaftslehre und mindestens 15 ECTS Credits in Volkswirtschaftslehre oder Recht, zus\u00e4tzlich mindestens 6 ECTS Credits in Mathematik/Statistik \n\nF\u00fcr die Pr\u00fcfung der (teilweisen) Fach\u00e4hnlichkeit werden ausschliesslich curriculare Credits eines abgeschlossenen Studiums ber\u00fccksichtigt.\n\u00dcbersch\u00fcssige Leistungen (fakultative Leistungen) werden nicht ber\u00fccksichtigt. Als Vergleichsbasis dienen die Pflichtleistungen des entsprechenden HSG Bachelor-Studiengangs."
+      "notes": "https://www.unisg.ch/de/studium/programme/master/business-innovation-mbi/\n\nTeilweise fachähnlicher universitärer Bachelor-Abschluss: \n60 ECTS Credits in zwei der drei Kernbereiche Betriebswirtschaftslehre, Volkswirtschaftslehre und Recht, davon mindestens 30 ECTS Credits in Betriebswirtschaftslehre und mindestens 15 ECTS Credits in Volkswirtschaftslehre oder Recht, zusätzlich mindestens 6 ECTS Credits in Mathematik/Statistik \n\nFür die Prüfung der (teilweisen) Fachähnlichkeit werden ausschliesslich curriculare Credits eines abgeschlossenen Studiums berücksichtigt.\nÜberschüssige Leistungen (fakultative Leistungen) werden nicht berücksichtigt. Als Vergleichsbasis dienen die Pflichtleistungen des entsprechenden HSG Bachelor-Studiengangs."
     },
     {
       "university": "Nanyang Technological University (NTU)",
@@ -193,7 +193,7 @@
       "duration": 12,
       "status": "Not started",
       "prerequisites": "2.1 degree at Undergraduate (mindestens 5.0 Schnitt)\n\nEnglish Requirements:\nCAE 190 Score Overall\nCPE 190 Score Overall\nTOEFL: 100 (Minimum language components L21, R22, W21, S23)",
-      "fee": "\u00a330,320",
+      "fee": "£30,320",
       "startDate": "September 1, 2026",
       "notes": "https://www.wbs.ac.uk/courses/masters/management/"
     },
@@ -206,7 +206,7 @@
       "duration": 12,
       "status": "Not started",
       "prerequisites": "2:2 degree\n\nEnglish Requirements:\nIELTS (Academic) Test with an overall score of at least 6.5, and a minimum of 6.0 in each element of the test",
-      "fee": "\u00a330,000",
+      "fee": "£30,000",
       "startDate": "",
       "notes": "https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/management-msc/2026/"
     },
@@ -219,7 +219,7 @@
       "duration": 12,
       "status": "Not started",
       "prerequisites": "2:2 degree\n\nEnglish Requirements:\nIELTS (Academic) Test with an overall score of at least 6.5, and a minimum of 6.0 in each element of the test",
-      "fee": "\u00a328,000",
+      "fee": "£28,000",
       "startDate": "",
       "notes": "https://www.lancaster.ac.uk/study/postgraduate/postgraduate-courses/management-and-artificial-intelligence-msc/2026/"
     },
@@ -258,7 +258,7 @@
       "duration": 12,
       "status": "Done",
       "prerequisites": "",
-      "fee": "\u00a342,500",
+      "fee": "£42,500",
       "startDate": "September 1, 2026",
       "notes": ""
     },
@@ -271,7 +271,7 @@
       "duration": 12,
       "status": "Done",
       "prerequisites": "",
-      "fee": "\u00a344,000",
+      "fee": "£44,000",
       "startDate": "September 1, 2026",
       "notes": ""
     },
