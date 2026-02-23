@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-02-23T15:28:30.076Z",
+  "lastModified": "2026-02-23T15:28:42.619Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -266,13 +266,13 @@
       "university": "Imperial College",
       "country": "UK",
       "programme": "Management",
-      "deadline": "September 28, 2025",
+      "deadline": "September 27, 2025",
       "ranking": "#8 World University Ranking",
       "duration": 12,
-      "status": "Done",
+      "status": "Not started",
       "prerequisites": "",
       "fee": "£44,000",
-      "startDate": "September 1, 2026",
+      "startDate": "August 31, 2026",
       "notes": ""
     },
     {
