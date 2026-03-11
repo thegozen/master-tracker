@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-11T20:49:22.978Z",
+  "lastModified": "2026-03-11T20:49:56.900Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -305,14 +305,14 @@
       "university": "EDHEC Business School",
       "country": "FR",
       "programme": "Entrepreneurship & Innovation",
-      "deadline": "June 10, 2026",
+      "deadline": "June 9, 2026",
       "ranking": "#9 FT Business School",
       "duration": 18,
       "status": "Not started",
       "prerequisites": "Minimum three-year bachelor’s degree (any type of engineering or business/finance background)\n\nTOEFL iBT ≥ 92 / TOEFL iBT Home Edition ≥ 92 / TOEFL iTP ≥ 570  \n\nOptional Aptitude Test Score GMAT or GRE or TAGE MAGE or CAT* official test score report (CAT* for Indian students only) can add value to your application",
       "fee": "€28'700",
-      "startDate": "September 1, 2026",
-      "notes": ""
+      "startDate": "August 31, 2026",
+      "notes": "https://www.edhec.edu/en/programmes/masters-degree/business-degrees/msc-in-entrepreneurship-and-innovation"
     }
   ]
 }
