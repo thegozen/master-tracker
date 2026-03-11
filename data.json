@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-11T20:54:17.359Z",
+  "lastModified": "2026-03-11T20:54:28.220Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -316,15 +316,15 @@
     },
     {
       "university": "EDHEC Business School",
-      "country": "UK",
+      "country": "FR",
       "programme": "Data Analytics & Artificial Intelligence",
-      "deadline": "June 10, 2026",
+      "deadline": "June 9, 2026",
       "ranking": "",
       "duration": 18,
       "status": "Not started",
       "prerequisites": "",
       "fee": "€28'700",
-      "startDate": "September 1, 2026",
+      "startDate": "August 31, 2026",
       "notes": ""
     }
   ]
