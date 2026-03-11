@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-11T11:47:43.094Z",
+  "lastModified": "2026-03-11T20:49:22.978Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -300,6 +300,19 @@
       "fee": "43'000€",
       "startDate": "September 18, 2026",
       "notes": "- No minimum GPA\n- When score is close to 100, the Admissions Committee can review my profile and determine whether an exemption is possible.\n\nhttps://www.ie.edu/business-school/programs/masters/master-in-digital-business-innovation/\n\nBrochure:\nhttps://iem-brochures.ie.edu/.mdbi/#page=1"
+    },
+    {
+      "university": "EDHEC Business School",
+      "country": "FR",
+      "programme": "Entrepreneurship & Innovation",
+      "deadline": "June 10, 2026",
+      "ranking": "#9 FT Business School",
+      "duration": 18,
+      "status": "Not started",
+      "prerequisites": "Minimum three-year bachelor’s degree (any type of engineering or business/finance background)\n\nTOEFL iBT ≥ 92 / TOEFL iBT Home Edition ≥ 92 / TOEFL iTP ≥ 570  \n\nOptional Aptitude Test Score GMAT or GRE or TAGE MAGE or CAT* official test score report (CAT* for Indian students only) can add value to your application",
+      "fee": "€28'700",
+      "startDate": "September 1, 2026",
+      "notes": ""
     }
   ]
 }
