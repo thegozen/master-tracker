@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-11T10:47:11.166Z",
+  "lastModified": "2026-03-11T10:55:34.954Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -287,6 +287,19 @@
       "fee": "36'000€",
       "startDate": "September 24, 2026",
       "notes": "- No minimum GPA\n- When score is close to 100, the Admissions Committee can review my profile and determine whether an exemption is possible."
+    },
+    {
+      "university": "ie University",
+      "country": "ES",
+      "programme": "Digital Business & Innovation",
+      "deadline": "",
+      "ranking": "",
+      "duration": 11,
+      "status": "Not started",
+      "prerequisites": "ieGAT (IE Global Admissions Test), GMAT, GRE, or LSAT\n",
+      "fee": "43'000€",
+      "startDate": "",
+      "notes": ""
     }
   ]
 }
