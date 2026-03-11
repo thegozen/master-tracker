@@ -310,22 +310,16 @@
             font-weight: 500;
         }
 
-        .status-done { background: #dcfce7; color: #166534; }
         .status-pending { background: #fef3c7; color: #92400e; }
-        .status-rejected { background: #fee2e2; color: #991b1b; }
-        .status-not-interested { background: #f1f5f9; color: #64748b; }
         .status-in-progress { background: #dbeafe; color: #1e40af; }
-        .status-accepted { background: #d1fae5; color: #065f46; }
-        .status-enrolled { background: #064e3b; color: #ffffff; }
+        .status-applied { background: #dcfce7; color: #166534; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
         .status-withdrawn { background: #e2e8f0; color: #475569; }
 
-        .dark .status-done { background: #052e16; color: #4ade80; }
         .dark .status-pending { background: #422006; color: #fbbf24; }
-        .dark .status-rejected { background: #450a0a; color: #fca5a5; }
-        .dark .status-not-interested { background: #334155; color: #94a3b8; }
         .dark .status-in-progress { background: #1e3a5f; color: #93c5fd; }
-        .dark .status-accepted { background: #064e3b; color: #6ee7b7; }
-        .dark .status-enrolled { background: #10b981; color: #ffffff; }
+        .dark .status-applied { background: #052e16; color: #4ade80; }
+        .dark .status-rejected { background: #450a0a; color: #fca5a5; }
         .dark .status-withdrawn { background: #334155; color: #94a3b8; }
 
         .country-flag {
@@ -570,22 +564,16 @@
         }
 
         .status-select:focus { outline: none; border-color: var(--primary); }
-        .status-select.status-done { border-color: var(--success); background: #dcfce7; color: #166534; }
         .status-select.status-pending { border-color: var(--warning); background: #fef3c7; color: #92400e; }
-        .status-select.status-rejected { border-color: var(--danger); background: #fee2e2; color: #991b1b; }
-        .status-select.status-not-interested { border-color: #94a3b8; background: #f1f5f9; color: #64748b; }
         .status-select.status-in-progress { border-color: #3b82f6; background: #dbeafe; color: #1e40af; }
-        .status-select.status-accepted { border-color: #10b981; background: #d1fae5; color: #065f46; }
-        .status-select.status-enrolled { border-color: #064e3b; background: #064e3b; color: #ffffff; }
+        .status-select.status-applied { border-color: var(--success); background: #dcfce7; color: #166534; }
+        .status-select.status-rejected { border-color: var(--danger); background: #fee2e2; color: #991b1b; }
         .status-select.status-withdrawn { border-color: #64748b; background: #e2e8f0; color: #475569; }
 
-        .dark .status-select.status-done { background: #052e16; color: #4ade80; }
         .dark .status-select.status-pending { background: #422006; color: #fbbf24; }
-        .dark .status-select.status-rejected { background: #450a0a; color: #fca5a5; }
-        .dark .status-select.status-not-interested { background: #334155; color: #94a3b8; }
         .dark .status-select.status-in-progress { background: #1e3a5f; color: #93c5fd; }
-        .dark .status-select.status-accepted { background: #064e3b; color: #6ee7b7; }
-        .dark .status-select.status-enrolled { background: #10b981; color: #ffffff; }
+        .dark .status-select.status-applied { background: #052e16; color: #4ade80; }
+        .dark .status-select.status-rejected { background: #450a0a; color: #fca5a5; }
         .dark .status-select.status-withdrawn { background: #334155; color: #94a3b8; }
 
         /* View Toggle */
@@ -1144,12 +1132,12 @@
                 <div class="card-value warning" id="appliedCount">0</div>
             </div>
             <div class="card">
-                <div class="card-label">Accepted</div>
-                <div class="card-value success" id="acceptedCount">0</div>
-            </div>
-            <div class="card">
                 <div class="card-label">Rejected</div>
                 <div class="card-value danger" id="rejectedCount">0</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Withdrawn</div>
+                <div class="card-value" style="color: #64748b;" id="withdrawnCount">0</div>
             </div>
         </div>
 
@@ -1200,12 +1188,9 @@
                 <div class="multi-select-dropdown" style="max-height: 300px; overflow-y: auto;">
                     <div class="multi-select-option selected" data-value="Not started" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Not Started</span></div>
                     <div class="multi-select-option selected" data-value="In progress" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>In Progress</span></div>
-                    <div class="multi-select-option selected" data-value="Done" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Applied</span></div>
-                    <div class="multi-select-option selected" data-value="Accepted" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Accepted</span></div>
+                    <div class="multi-select-option selected" data-value="Applied" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Applied</span></div>
                     <div class="multi-select-option selected" data-value="Rejected" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Rejected</span></div>
-                    <div class="multi-select-option selected" data-value="Enrolled" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Enrolled</span></div>
                     <div class="multi-select-option selected" data-value="Withdrawn" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Withdrawn</span></div>
-                    <div class="multi-select-option selected" data-value="Not interested" onclick="toggleStatusOption(this)"><div class="multi-select-checkbox"></div><span>Not Interested</span></div>
                 </div>
             </div>
         </div>
@@ -1318,12 +1303,9 @@
                             <select class="edit-input" id="addStatus">
                                 <option value="Not started">Not Started</option>
                                 <option value="In progress">In Progress</option>
-                                <option value="Done">Applied</option>
-                                <option value="Accepted">Accepted</option>
+                                <option value="Applied">Applied</option>
                                 <option value="Rejected">Rejected</option>
-                                <option value="Enrolled">Enrolled</option>
                                 <option value="Withdrawn">Withdrawn</option>
-                                <option value="Not interested">Not Interested</option>
                             </select>
                         </div>
                     </div>
@@ -1760,12 +1742,9 @@
         function getStatusInfo(status) {
             switch (status) {
                 case 'In progress': return { class: 'status-in-progress', text: 'In Progress' };
-                case 'Done': return { class: 'status-done', text: 'Applied' };
-                case 'Accepted': return { class: 'status-accepted', text: 'Accepted' };
+                case 'Applied': return { class: 'status-applied', text: 'Applied' };
                 case 'Rejected': return { class: 'status-rejected', text: 'Rejected' };
-                case 'Enrolled': return { class: 'status-enrolled', text: 'Enrolled' };
                 case 'Withdrawn': return { class: 'status-withdrawn', text: 'Withdrawn' };
-                case 'Not interested': return { class: 'status-not-interested', text: 'Not Interested' };
                 default: return { class: 'status-pending', text: 'Not Started' };
             }
         }
@@ -1777,16 +1756,16 @@
             const total = programmes.filter(p => p.programme).length;
             const notStarted = programmes.filter(p => p.status === 'Not started' && p.programme).length;
             const inProgress = programmes.filter(p => p.status === 'In progress').length;
-            const applied = programmes.filter(p => p.status === 'Done').length;
-            const accepted = programmes.filter(p => p.status === 'Accepted').length;
+            const applied = programmes.filter(p => p.status === 'Applied').length;
             const rejected = programmes.filter(p => p.status === 'Rejected').length;
+            const withdrawn = programmes.filter(p => p.status === 'Withdrawn').length;
 
             document.getElementById('totalCount').textContent = total;
             document.getElementById('notStartedCount').textContent = notStarted;
             document.getElementById('inProgressCount').textContent = inProgress;
             document.getElementById('appliedCount').textContent = applied;
-            document.getElementById('acceptedCount').textContent = accepted;
             document.getElementById('rejectedCount').textContent = rejected;
+            document.getElementById('withdrawnCount').textContent = withdrawn;
 
             // Country cards
             const countryCounts = {};
@@ -1924,14 +1903,13 @@
         function updateStatusLabel() {
             const selected = getSelectedStatuses();
             const label = document.getElementById('statusFilterLabel');
-            const totalStatuses = 8;
+            const totalStatuses = 5;
             if (selected.length === 0 || selected.length === totalStatuses) {
                 label.textContent = 'All Status';
             } else if (selected.length === 1) {
                 const names = {
-                    'Not started': 'Not Started', 'In progress': 'In Progress', 'Done': 'Applied',
-                    'Accepted': 'Accepted', 'Rejected': 'Rejected', 'Enrolled': 'Enrolled',
-                    'Withdrawn': 'Withdrawn', 'Not interested': 'Not Interested'
+                    'Not started': 'Not Started', 'In progress': 'In Progress', 'Applied': 'Applied',
+                    'Rejected': 'Rejected', 'Withdrawn': 'Withdrawn'
                 };
                 label.textContent = names[selected[0]];
             } else {
@@ -2056,12 +2034,9 @@
                             ${dayProgrammes.slice(0, 2).map(p => {
                                 let eventClass = 'pending';
                                 if (p.status === 'In progress') eventClass = 'in-progress';
-                                else if (p.status === 'Done') eventClass = 'done';
-                                else if (p.status === 'Accepted') eventClass = 'accepted';
+                                else if (p.status === 'Applied') eventClass = 'applied';
                                 else if (p.status === 'Rejected') eventClass = 'rejected';
-                                else if (p.status === 'Enrolled') eventClass = 'enrolled';
                                 else if (p.status === 'Withdrawn') eventClass = 'withdrawn';
-                                else if (p.status === 'Not interested') eventClass = 'not-interested';
                                 return `<div class="day-event ${eventClass}">${p.university}</div>`;
                             }).join('')}
                             ${dayProgrammes.length > 2 ? `<div class="day-event" style="background: var(--border);">+${dayProgrammes.length - 2} more</div>` : ''}
@@ -2151,12 +2126,9 @@
                             <select class="status-select ${statusInfo.class}" id="editStatus" onchange="updateStatusStyle(this)">
                                 <option value="Not started" ${p.status === 'Not started' ? 'selected' : ''}>Not Started</option>
                                 <option value="In progress" ${p.status === 'In progress' ? 'selected' : ''}>In Progress</option>
-                                <option value="Done" ${p.status === 'Done' ? 'selected' : ''}>Applied</option>
-                                <option value="Accepted" ${p.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                <option value="Applied" ${p.status === 'Applied' ? 'selected' : ''}>Applied</option>
                                 <option value="Rejected" ${p.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
-                                <option value="Enrolled" ${p.status === 'Enrolled' ? 'selected' : ''}>Enrolled</option>
                                 <option value="Withdrawn" ${p.status === 'Withdrawn' ? 'selected' : ''}>Withdrawn</option>
-                                <option value="Not interested" ${p.status === 'Not interested' ? 'selected' : ''}>Not Interested</option>
                             </select>
                         </div>
                     </div>
