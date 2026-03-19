@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-11T20:54:28.220Z",
+  "lastModified": "2026-03-19T18:21:11.624Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -110,13 +110,13 @@
       "university": "HSG",
       "country": "CH",
       "programme": "Business Innovation",
-      "deadline": "March 31, 2026",
+      "deadline": "March 30, 2026",
       "ranking": "#9 FT Business School (EU)",
       "duration": 36,
-      "status": "Not started",
+      "status": "Withdrawn",
       "prerequisites": "- mindestens teilweise fachähnlicher Bachelor-Abschluss einer Schweizer Universität\n\n- betriebswirtschaftlicher (fachähnlicher) Bachelor-Abschluss einer Schweizer Fachhochschule mit einem Mindestnotenschnitt von 5.00 im Abschlusszeugnis und maximal 20 ECTS Credits von 180 ECTS Credits an Praktikumsleistungen.",
       "fee": "",
-      "startDate": "October 1, 2026",
+      "startDate": "September 30, 2026",
       "notes": "https://www.unisg.ch/de/studium/programme/master/business-innovation-mbi/\n\nTeilweise fachähnlicher universitärer Bachelor-Abschluss: \n60 ECTS Credits in zwei der drei Kernbereiche Betriebswirtschaftslehre, Volkswirtschaftslehre und Recht, davon mindestens 30 ECTS Credits in Betriebswirtschaftslehre und mindestens 15 ECTS Credits in Volkswirtschaftslehre oder Recht, zusätzlich mindestens 6 ECTS Credits in Mathematik/Statistik \n\nFür die Prüfung der (teilweisen) Fachähnlichkeit werden ausschliesslich curriculare Credits eines abgeschlossenen Studiums berücksichtigt.\nÜberschüssige Leistungen (fakultative Leistungen) werden nicht berücksichtigt. Als Vergleichsbasis dienen die Pflichtleistungen des entsprechenden HSG Bachelor-Studiengangs."
     },
     {
