@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-26T23:49:24.258Z",
+  "lastModified": "2026-03-26T23:53:21.561Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -318,13 +318,13 @@
       "university": "EDHEC Business School",
       "country": "FR",
       "programme": "Data Analytics & Artificial Intelligence",
-      "deadline": "June 8, 2026",
-      "ranking": "",
+      "deadline": "June 7, 2026",
+      "ranking": "#9 FT Business School",
       "duration": 18,
       "status": "Not started",
       "prerequisites": "Minimum three-year bachelor’s degree (any type of engineering or business/finance background)\n\nTOEFL iBT ≥ 92 / TOEFL iBT Home Edition ≥ 92 / TOEFL iTP ≥ 570  \n\nOptional Aptitude Test Score GMAT or GRE or TAGE MAGE or CAT* official test score report (CAT* for Indian students only) can add value to your application",
       "fee": "€28'700",
-      "startDate": "August 30, 2026",
+      "startDate": "August 29, 2026",
       "notes": ""
     }
   ]
