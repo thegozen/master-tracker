@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-27T00:03:02.485Z",
+  "lastModified": "2026-03-27T00:06:54.006Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -325,6 +325,19 @@
       "prerequisites": "Minimum three-year bachelor’s degree (any type of engineering or business/finance background)\n\nTOEFL iBT ≥ 92 / TOEFL iBT Home Edition ≥ 92 / TOEFL iTP ≥ 570  \n\nOptional Aptitude Test Score GMAT or GRE or TAGE MAGE or CAT* official test score report (CAT* for Indian students only) can add value to your application",
       "fee": "€28'700",
       "startDate": "August 28, 2026",
+      "notes": ""
+    },
+    {
+      "university": "Nova School of Business & Economics",
+      "country": "PT",
+      "programme": "Business Analytics",
+      "deadline": "April 30, 2026",
+      "ranking": "#17 Business School",
+      "duration": null,
+      "status": "Not started",
+      "prerequisites": "",
+      "fee": "",
+      "startDate": "",
       "notes": ""
     }
   ]
