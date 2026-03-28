@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-03-28T10:21:19.852Z",
+  "lastModified": "2026-03-28T10:21:25.628Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -351,7 +351,7 @@
       "prerequisites": "",
       "fee": "",
       "startDate": "",
-      "notes": "Brochure: https://novasbe.maglr.com/msc-iei/overview"
+      "notes": "Brochure: \nhttps://novasbe.maglr.com/msc-iei/overview"
     }
   ]
 }
