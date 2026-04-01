@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-04-01T21:30:38.221Z",
+  "lastModified": "2026-04-01T21:37:18.590Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -363,6 +363,19 @@
       "status": "Not started",
       "prerequisites": "",
       "fee": "",
+      "startDate": "",
+      "notes": ""
+    },
+    {
+      "university": "Warwick Business School",
+      "country": "UK",
+      "programme": "Management of Information Systems & Digital Innovation",
+      "deadline": "August 2, 2026",
+      "ranking": "",
+      "duration": 12,
+      "status": "Not started",
+      "prerequisites": "",
+      "fee": "£37,450",
       "startDate": "",
       "notes": ""
     }
