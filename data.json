@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-04-01T21:37:18.590Z",
+  "lastModified": "2026-04-01T21:41:18.082Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -357,13 +357,13 @@
       "university": "Warwick Business School",
       "country": "UK",
       "programme": "MSc Innovation and Entrepreneurship",
-      "deadline": "August 31, 2026",
+      "deadline": "August 30, 2026",
       "ranking": "",
       "duration": 12,
       "status": "Not started",
-      "prerequisites": "",
-      "fee": "",
-      "startDate": "",
+      "prerequisites": "In order to meet our academic entry requirement, you should have obtained the minimum of a UK 2:1 undergraduate degree (or equivalent).\n\nCandidates with a UK 2:2 (or equivalent) may be accepted upon demonstration of relevant professional experience.\n\nTOEFL 5",
+      "fee": "£40,740",
+      "startDate": "August 31, 2026",
       "notes": ""
     },
     {
