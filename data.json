@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-04-01T11:50:00.274Z",
+  "lastModified": "2026-04-01T21:30:38.221Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -352,6 +352,19 @@
       "fee": "",
       "startDate": "",
       "notes": "Brochure: \nhttps://novasbe.maglr.com/msc-iei/overview"
+    },
+    {
+      "university": "Warwick Business School",
+      "country": "UK",
+      "programme": "MSc Innovation and Entrepreneurship",
+      "deadline": "August 31, 2026",
+      "ranking": "",
+      "duration": 12,
+      "status": "Not started",
+      "prerequisites": "",
+      "fee": "",
+      "startDate": "",
+      "notes": ""
     }
   ]
 }
