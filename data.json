@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastModified": "2026-05-04T21:08:46.346Z",
+  "lastModified": "2026-05-04T21:08:56.213Z",
   "programmes": [
     {
       "university": "Alliance Manchester Business School",
@@ -149,13 +149,13 @@
       "university": "ZHAW",
       "country": "CH",
       "programme": "Wirtschaftsinformatik",
-      "deadline": "May 30, 2026",
+      "deadline": "May 29, 2026",
       "ranking": "#58 FT Master in Management (Worldwide)\n#62 FT Business School (EU)",
       "duration": 24,
-      "status": "Not started",
+      "status": "Withdrawn",
       "prerequisites": "",
       "fee": "",
-      "startDate": "September 1, 2026",
+      "startDate": "August 31, 2026",
       "notes": "https://www.zhaw.ch/de/sml/studium/master/wirtschaftsinformatik"
     },
     {
