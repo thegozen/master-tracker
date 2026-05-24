@@ -1866,6 +1866,16 @@
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         }
 
+        // YYYY-MM-DD for <input type="date">, using LOCAL date parts.
+        // (Avoid toISOString(), which shifts to UTC and drops a day in CET/CEST.)
+        function toInputDate(date) {
+            if (!date) return '';
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
         // =============================================
         // Status Helpers
         // =============================================
@@ -2243,10 +2253,8 @@
 
             const statusInfo = getStatusInfo(p.status);
 
-            const deadlineDate = parseDate(p.deadline);
-            const deadlineValue = deadlineDate ? deadlineDate.toISOString().split('T')[0] : '';
-            const startDateParsed = parseDate(p.startDate);
-            const startDateValue = startDateParsed ? startDateParsed.toISOString().split('T')[0] : '';
+            const deadlineValue = toInputDate(parseDate(p.deadline));
+            const startDateValue = toInputDate(parseDate(p.startDate));
 
             document.getElementById('modalBody').innerHTML = `
                 <div class="detail-grid">
