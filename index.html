@@ -1091,7 +1091,7 @@
         <!-- Token Setup Banner -->
         <div class="token-banner" id="tokenBanner" style="display:none;">
             <div class="token-banner-text">
-                <strong>GitHub token not set.</strong> To save changes to the repository, set up a GitHub token in Settings.
+                <strong>Saving not set up on this device.</strong> Add your Sync Worker URL and edit password in Settings to save changes from here.
             </div>
             <button class="btn-dismiss" onclick="dismissTokenBanner()">&times;</button>
         </div>
@@ -1352,16 +1352,31 @@
             <div class="modal-header">
                 <div>
                     <div class="modal-title">Settings</div>
-                    <div class="modal-subtitle">GitHub API Configuration</div>
+                    <div class="modal-subtitle">Sync &amp; Save</div>
                 </div>
                 <button class="modal-close" onclick="closeSettingsModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="settings-field">
-                    <label for="settingsToken">GitHub Personal Access Token</label>
+                    <label for="settingsWorkerUrl">Sync Worker URL</label>
+                    <input type="text" class="edit-input" id="settingsWorkerUrl" placeholder="https://master-tracker.your-name.workers.dev">
+                    <label for="settingsPassword" style="margin-top:12px;">Edit Password</label>
+                    <input type="password" class="edit-input" id="settingsPassword" placeholder="your edit password">
+                    <div class="hint">
+                        <strong>Recommended.</strong> Saves changes through your Cloudflare Worker, so no GitHub token is ever stored on this device. Works from any phone or computer with just this URL and password.
+                    </div>
+                    <div class="settings-actions">
+                        <button class="btn btn-primary btn-sm" onclick="testWorkerConnection()">Test</button>
+                        <button class="btn btn-save btn-sm" onclick="saveWorkerConfig()">Save</button>
+                        <button class="btn btn-delete btn-sm" onclick="removeWorkerConfig()">Remove</button>
+                    </div>
+                    <div class="connection-status" id="workerStatus"></div>
+                </div>
+                <div class="settings-field">
+                    <label for="settingsToken">Advanced: GitHub Token (alternative)</label>
                     <input type="password" class="edit-input" id="settingsToken" placeholder="ghp_xxxxxxxxxxxx">
                     <div class="hint">
-                        Fine-grained token with <strong>Contents: Read and write</strong> on <code>thegozen/master-tracker</code>.
+                        Only needed if you are <em>not</em> using the Worker above. Fine-grained token with <strong>Contents: Read and write</strong> on <code>thegozen/master-tracker</code>, stored on this device only.
                         <br><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" style="color: var(--primary);">Create a token on GitHub &rarr;</a>
                     </div>
                     <div class="settings-actions">
@@ -1391,6 +1406,11 @@
             branch: 'main',
             dataPath: 'data.json'
         };
+
+        // Default Cloudflare Worker that saves changes (not secret — the edit
+        // password is the auth gate). Pre-filled in Settings so a new device
+        // only needs the password.
+        const DEFAULT_WORKER_URL = 'https://master-tracker.nsakutshang.workers.dev';
 
         let currentSHA = null; // SHA of data.json for optimistic concurrency
 
@@ -1458,6 +1478,36 @@
         // =============================================
         function getToken() {
             return localStorage.getItem('githubToken') || '';
+        }
+
+        function getWorkerUrl() {
+            return localStorage.getItem('workerUrl') || DEFAULT_WORKER_URL;
+        }
+
+        function getEditPassword() {
+            return localStorage.getItem('editPassword') || '';
+        }
+
+        async function saveViaWorker(data) {
+            const workerUrl = getWorkerUrl();
+            const password = getEditPassword();
+            if (!workerUrl) throw new Error('No Worker URL configured. Open Settings.');
+            if (!password) throw new Error('No edit password set. Open Settings.');
+
+            const response = await fetch(workerUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, data })
+            });
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.error || `${response.status} ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            if (result.sha) currentSHA = result.sha;
+            return result;
         }
 
         async function fetchDataFromGitHub() {
@@ -1549,9 +1599,12 @@
             // Always cache locally
             localStorage.setItem('githubDataCache', JSON.stringify(data));
 
+            const workerUrl = getWorkerUrl();
+            const password = getEditPassword();
             const token = getToken();
-            if (!token) {
-                showToast('Changes saved locally (no GitHub token set)', 'warning');
+
+            if (!((workerUrl && password) || token)) {
+                showToast('Changes saved locally (set up sync in Settings to save online)', 'warning');
                 return;
             }
 
@@ -1562,12 +1615,16 @@
 
             showSaving();
             try {
-                await saveDataToGitHub(data);
+                if (workerUrl && password) {
+                    await saveViaWorker(data);
+                } else {
+                    await saveDataToGitHub(data);
+                }
                 hideSaving();
-                showToast('Saved to GitHub', 'success', 2500);
+                showToast('Saved', 'success', 2500);
             } catch (err) {
                 hideSaving();
-                console.error('GitHub save error:', err);
+                console.error('Save error:', err);
                 showToast('Save failed: ' + err.message, 'error', 6000);
             }
         }
@@ -1606,11 +1663,84 @@
         // Token Management / Settings Modal
         // =============================================
         function openSettingsModal() {
-            const token = getToken();
-            document.getElementById('settingsToken').value = token;
+            document.getElementById('settingsToken').value = getToken();
+            document.getElementById('settingsWorkerUrl').value = getWorkerUrl();
+            document.getElementById('settingsPassword').value = getEditPassword();
             document.getElementById('connectionStatus').className = 'connection-status';
             document.getElementById('connectionStatus').textContent = '';
+            const ws = document.getElementById('workerStatus');
+            ws.className = 'connection-status';
+            ws.textContent = '';
             document.getElementById('settingsModalOverlay').classList.add('active');
+        }
+
+        function saveWorkerConfig() {
+            const url = document.getElementById('settingsWorkerUrl').value.trim();
+            const password = document.getElementById('settingsPassword').value.trim();
+            if (url) localStorage.setItem('workerUrl', url); else localStorage.removeItem('workerUrl');
+            if (password) localStorage.setItem('editPassword', password); else localStorage.removeItem('editPassword');
+            if (url && password) {
+                showToast('Sync settings saved', 'success', 2000);
+                document.getElementById('tokenBanner').style.display = 'none';
+            } else {
+                showToast('Enter both a Worker URL and password', 'warning', 3000);
+            }
+        }
+
+        function removeWorkerConfig() {
+            localStorage.removeItem('workerUrl');
+            localStorage.removeItem('editPassword');
+            document.getElementById('settingsWorkerUrl').value = '';
+            document.getElementById('settingsPassword').value = '';
+            showToast('Sync settings removed', 'info', 2000);
+            const status = document.getElementById('workerStatus');
+            status.className = 'connection-status';
+            status.textContent = '';
+        }
+
+        async function testWorkerConnection() {
+            const url = document.getElementById('settingsWorkerUrl').value.trim();
+            const password = document.getElementById('settingsPassword').value.trim();
+            const status = document.getElementById('workerStatus');
+
+            if (!url || !password) {
+                status.className = 'connection-status show fail';
+                status.style.background = '';
+                status.style.color = '';
+                status.textContent = 'Enter both the Worker URL and password first.';
+                return;
+            }
+
+            status.className = 'connection-status show info';
+            status.style.background = '#dbeafe';
+            status.style.color = '#1e40af';
+            status.textContent = 'Testing...';
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password, test: true })
+                });
+                const data = await res.json().catch(() => ({}));
+                status.style.background = '';
+                status.style.color = '';
+                if (res.ok) {
+                    status.className = 'connection-status show ok';
+                    status.textContent = 'Worker reachable, password accepted, GitHub access OK.';
+                } else if (res.status === 401) {
+                    status.className = 'connection-status show fail';
+                    status.textContent = 'Wrong edit password.';
+                } else {
+                    status.className = 'connection-status show fail';
+                    status.textContent = 'Error: ' + (data.error || (res.status + ' ' + res.statusText));
+                }
+            } catch (err) {
+                status.className = 'connection-status show fail';
+                status.style.background = '';
+                status.style.color = '';
+                status.textContent = 'Network error: ' + err.message + ' (check the URL).';
+            }
         }
 
         function closeSettingsModal(event) {
@@ -2395,8 +2525,9 @@
                 document.body.classList.add('dark');
             }
 
-            // Show token banner if no token and not dismissed
-            if (!getToken() && localStorage.getItem('tokenBannerDismissed') !== 'true') {
+            // Show setup banner only if no save method is configured and not dismissed
+            const hasSync = (getWorkerUrl() && getEditPassword()) || getToken();
+            if (!hasSync && localStorage.getItem('tokenBannerDismissed') !== 'true') {
                 document.getElementById('tokenBanner').style.display = 'flex';
             }
 
